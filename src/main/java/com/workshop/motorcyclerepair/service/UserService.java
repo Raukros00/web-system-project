@@ -1,6 +1,6 @@
 package com.workshop.motorcyclerepair.service;
 
-import com.workshop.motorcyclerepair.dto.UpdateUserRequest;
+import com.workshop.motorcyclerepair.dto.UpdateUserRequestDTO;
 import com.workshop.motorcyclerepair.dto.UserDTO;
 import com.workshop.motorcyclerepair.mapper.UserMapper;
 import com.workshop.motorcyclerepair.model.User;
@@ -26,32 +26,32 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-    public UserDTO updateUser(Long userId, UpdateUserRequest updateUserRequest) {
+    public UserDTO updateUser(Long userId, UpdateUserRequestDTO updateUserRequestDTO) {
         User updatedUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found!"));
 
-        if(!Objects.isNull(updateUserRequest.username())) {
-            updatedUser.setUsername(updateUserRequest.username());
+        if(!Objects.isNull(updateUserRequestDTO.username())) {
+            updatedUser.setUsername(updateUserRequestDTO.username());
         }
 
-        if(!Objects.isNull(updateUserRequest.password())) {
-            updatedUser.setPassword(passwordEncoder.encode(updateUserRequest.password()));
+        if(!Objects.isNull(updateUserRequestDTO.password())) {
+            updatedUser.setPassword(passwordEncoder.encode(updateUserRequestDTO.password()));
         }
 
-        if(!Objects.isNull(updateUserRequest.email())) {
-            updatedUser.setEmail(updateUserRequest.email());
+        if(!Objects.isNull(updateUserRequestDTO.email())) {
+            updatedUser.setEmail(updateUserRequestDTO.email());
         }
 
-        if(!Objects.isNull(updateUserRequest.firstName())) {
-            updatedUser.setFirstName(updateUserRequest.firstName());
+        if(!Objects.isNull(updateUserRequestDTO.firstName())) {
+            updatedUser.setFirstName(updateUserRequestDTO.firstName());
         }
 
-        if(!Objects.isNull(updateUserRequest.lastName())) {
-            updatedUser.setLastName(updateUserRequest.lastName());
+        if(!Objects.isNull(updateUserRequestDTO.lastName())) {
+            updatedUser.setLastName(updateUserRequestDTO.lastName());
         }
 
-        if(!Objects.isNull(updateUserRequest.role())) {
-            updatedUser.setRole(updateUserRequest.role());
+        if(!Objects.isNull(updateUserRequestDTO.role())) {
+            updatedUser.setRole(updateUserRequestDTO.role());
         }
 
         return userMapper.toDto(userRepository.save(updatedUser));

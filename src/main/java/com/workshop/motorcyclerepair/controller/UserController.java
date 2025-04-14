@@ -1,6 +1,6 @@
 package com.workshop.motorcyclerepair.controller;
 
-import com.workshop.motorcyclerepair.dto.UpdateUserRequest;
+import com.workshop.motorcyclerepair.dto.UpdateUserRequestDTO;
 import com.workshop.motorcyclerepair.dto.UserDTO;
 import com.workshop.motorcyclerepair.service.UserService;
 import lombok.AllArgsConstructor;
@@ -24,8 +24,8 @@ public class UserController {
 
     @PreAuthorize("@roleChecker.hasRole({'ADMIN'})")
     @PatchMapping("/{userId}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UpdateUserRequest updateUserRequest) {
-        return ResponseEntity.ok().body(userService.updateUser(userId, updateUserRequest));
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UpdateUserRequestDTO updateUserRequestDTO) {
+        return ResponseEntity.ok().body(userService.updateUser(userId, updateUserRequestDTO));
     }
 
 

@@ -1,10 +1,7 @@
 package com.workshop.motorcyclerepair.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,6 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "customer")
 @Data
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -23,7 +21,7 @@ public class Customer {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "fist_name", nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @Column(name = "last_name", nullable = false)
@@ -44,4 +42,15 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Practice> practices = new ArrayList<>();
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", birthDate=" + birthDate +
+                '}';
+    }
 }
