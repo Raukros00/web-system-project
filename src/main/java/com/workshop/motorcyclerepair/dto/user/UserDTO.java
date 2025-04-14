@@ -1,5 +1,7 @@
 package com.workshop.motorcyclerepair.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.workshop.motorcyclerepair.utils.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -14,10 +16,6 @@ public class UserDTO {
     @NotBlank(message = "Username is required")
     private String username;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters")
-    private String password;
-
     @NotBlank(message = "First name is required")
     private String firstName;
 
@@ -27,5 +25,7 @@ public class UserDTO {
     @NotBlank(message = "Email is required")
     @Email(message = "Emails should be valid")
     private String email;
+
+    private Role role;
 
 }

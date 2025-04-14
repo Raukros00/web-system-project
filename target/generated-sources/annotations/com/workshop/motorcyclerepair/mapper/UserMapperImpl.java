@@ -6,8 +6,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-11T17:34:37+0200",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.2 (Eclipse Adoptium)"
+    date = "2025-04-14T11:27:00+0200",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.6 (Eclipse Adoptium)"
 )
 public class UserMapperImpl implements UserMapper {
 
@@ -20,10 +20,10 @@ public class UserMapperImpl implements UserMapper {
         UserDTO userDTO = new UserDTO();
 
         userDTO.setUsername( user.getUsername() );
-        userDTO.setPassword( user.getPassword() );
         userDTO.setFirstName( user.getFirstName() );
         userDTO.setLastName( user.getLastName() );
         userDTO.setEmail( user.getEmail() );
+        userDTO.setRole( user.getRole() );
 
         return userDTO;
     }
@@ -34,14 +34,14 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        User user = new User();
+        User.UserBuilder user = User.builder();
 
-        user.setUsername( userDTO.getUsername() );
-        user.setPassword( userDTO.getPassword() );
-        user.setFirstName( userDTO.getFirstName() );
-        user.setLastName( userDTO.getLastName() );
-        user.setEmail( userDTO.getEmail() );
+        user.username( userDTO.getUsername() );
+        user.firstName( userDTO.getFirstName() );
+        user.lastName( userDTO.getLastName() );
+        user.email( userDTO.getEmail() );
+        user.role( userDTO.getRole() );
 
-        return user;
+        return user.build();
     }
 }
