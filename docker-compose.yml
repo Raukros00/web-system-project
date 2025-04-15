@@ -12,6 +12,7 @@ services:
     networks:
       - workshop-net
     volumes:
+      - ./sql:/docker-entrypoint-initdb.d
       - mysql-data:/var/lib/mysql
 
 networks:
