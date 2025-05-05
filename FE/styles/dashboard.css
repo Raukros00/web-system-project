@@ -1,0 +1,107 @@
+.Container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.Menu {
+  width: 20%;
+  padding: 1.25rem 0.9375rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 2px solid var(--grey);
+}
+
+.Logo__container {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+}
+
+.User {
+  margin-top: 3rem;
+  color: var(--white);
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.Menu__container {
+  margin-top: 3rem;
+}
+
+.Menu__container ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  color: var(--white);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.Menu__container ul > li {
+  padding: 0.625rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  gap: 0.3rem;
+}
+
+.Menu__container ul > li:hover,
+.active {
+  background-color: var(--main-color);
+  color: #111;
+  border-radius: 0.5rem;
+}
+
+.Main {
+  width: 80%;
+  padding: 1.25rem;
+  color: var(--white);
+  overflow-y: auto;
+}
+
+.Menu__Container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.Info__wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.Info__row {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  font-size: 1.125rem;
+}
+
+hr {
+  height: 0.0313rem;
+  background-color: #ccc;
+  border: none;
+}
+
+.Editor__card {
+  width: 100%;
+  height: auto;
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--main-color);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6.6px);
+  -webkit-backdrop-filter: blur(6.6px);
+  border: 1px solid rgba(255, 243, 122, 0.52);
+  color: #111;
+}

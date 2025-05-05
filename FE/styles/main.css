@@ -1,0 +1,320 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
+  width: 100dvw;
+  height: 100dvh;
+  background-color: var(--balck);
+}
+
+:root {
+  --main-color: #fff37a;
+  --balck: #242529;
+  --grey: #393a40;
+  --white: #f8eddf;
+}
+
+.Error__message {
+  color: #ff4c4c;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/** START LOADER **/
+
+.loader {
+  width: 60px;
+  height: 40px;
+  position: relative;
+  display: inline-block;
+  --base-color: #263238; /*use your base color*/
+}
+.loader::before {
+  content: "";
+  left: 0;
+  top: 0;
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #fff;
+  background-image: radial-gradient(
+      circle 8px at 18px 18px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 18px 0px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 0px 18px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 36px 18px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 18px 36px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 30px 5px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 30px 5px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 30px 30px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 5px 30px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 4px at 5px 5px,
+      var(--base-color) 100%,
+      transparent 0
+    );
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  animation: rotationBack 3s linear infinite;
+}
+.loader::after {
+  content: "";
+  left: 35px;
+  top: 15px;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #fff;
+  background-image: radial-gradient(
+      circle 5px at 12px 12px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 12px 0px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 0px 12px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 24px 12px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 12px 24px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 20px 3px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 20px 3px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 20px 20px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 3px 20px,
+      var(--base-color) 100%,
+      transparent 0
+    ),
+    radial-gradient(
+      circle 2.5px at 3px 3px,
+      var(--base-color) 100%,
+      transparent 0
+    );
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  animation: rotationBack 4s linear infinite reverse;
+}
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+.loader__container {
+  width: 100%;
+  margin: 4rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/** END LOADER **/
+
+/** START CARD **/
+
+.Card {
+  width: 70%;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  background-color: var(--grey);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/** END CARD **/
+
+/** START INPUT **/
+
+.Input__Text {
+  width: 49%;
+  height: 1.5rem;
+  padding: 1.5rem 0.4rem;
+  border: 1px solid var(--white);
+  background-color: transparent;
+  color: var(--white);
+  border-radius: 0.25rem;
+  font-size: 1.2rem;
+}
+
+.Input__Text:focus-visible {
+  border: 1px solid var(--main-color);
+  outline: 0;
+}
+
+.Input__Text:autofill {
+  background-color: transparent !important;
+}
+
+.Btn__primary {
+  padding: 0.8rem 0.4rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--main-color);
+  background-color: var(--main-color);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--grey);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.Btn:hover {
+  border-color: var(--main-color);
+  background-color: var(--main-color);
+  color: var(--balck);
+}
+/** END INPUT **/
+
+.Status__card {
+  width: 100%;
+  height: auto;
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  background: rgba(255, 243, 122, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6.6px);
+  -webkit-backdrop-filter: blur(6.6px);
+  border: 1px solid rgba(255, 243, 122, 0.52);
+}
+
+.Status__card--img {
+  width: 30%;
+  height: 100%;
+  height: auto;
+}
+
+.Status__card--img img {
+  width: auto;
+  max-height: 150px;
+  border-radius: 0.4rem;
+}
+
+.Status__card--text {
+  width: 70%;
+  padding: 0 2rem;
+  font-size: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.Status__card--customer {
+  font-weight: 700;
+}
+
+.Status__card--vehicleInfo {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Info--content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.Info--content span {
+  color: var(--main-color);
+  font-size: 1.125rem;
+}
+
+.Status__label {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 2px solid;
+  width: max-content;
+}
+
+.Status__label.COMPLETED {
+  border-color: #b7eb8f;
+  background-color: #e3ffc7de;
+  color: #389e0d;
+}
+
+.Status__label.IN_PROGRESS {
+  border-color: #ffd591;
+  background-color: #ffe9bade;
+  color: #d46b08;
+}
+
+.Status__label.ACCEPTED {
+  border-color: #ffa39e;
+  background-color: #fcc9c6de;
+  color: #cf1322;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/main.css" />
+    <link rel="stylesheet" href="./styles/login.css" />
+    <title>Officina Moto</title>
+  </head>
+  <body>
+    <main class="Main__container">
+      <div class="Logo__container">
+        <img src="./public/logo.png" alt="" class="Logo" />
+      </div>
+      <div class="Main__wrapper">
+        <div class="Card" id="loginCard">
+          <h1>Accesso riservato</h1>
+          <form class="Login__form" id="loginForm">
+            <div class="Input__wrapper">
+              <input
+                type="text"
+                class="Input__Text"
+                type="text"
+                placeholder="Username"
+                id="username"
+              />
+              <input
+                class="Input__Text"
+                type="password"
+                placeholder="password"
+                id="password"
+              />
+              <input class="Btn__primary" type="submit" value="Accedi" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="./script/login.js"></script>
+  </body>
+</html>

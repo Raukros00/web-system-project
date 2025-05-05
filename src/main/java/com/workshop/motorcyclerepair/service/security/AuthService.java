@@ -56,4 +56,9 @@ public class AuthService {
         ));
     }
 
+    public UserDTO getProfile(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Hello"));
+        return userMapper.toDto(user);
+    }
+
 }

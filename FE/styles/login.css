@@ -1,0 +1,49 @@
+.Main__container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.Logo__container {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+}
+
+.Main__wrapper {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.Logo {
+  object-fit: contain;
+}
+
+.Login__form {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.Input__wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.3rem;
+}
+
+.Input__wrapper input {
+  width: 100%;
+}

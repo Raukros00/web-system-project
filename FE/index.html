@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/main.css" />
+    <link rel="stylesheet" href="./styles/index.css" />
+    <title>Officina Moto</title>
+  </head>
+  <body>
+    <main class="Main__container">
+      <div class="Logo__container">
+        <img src="./public/logo.png" alt="" class="Logo" />
+      </div>
+      <div class="Main__wrapper">
+        <div class="Card" id="searchCard">
+          <h1>Controlla lo stato della tua moto</h1>
+          <form class="Search__form" onsubmit="searchPractice(event)">
+            <div class="Input__wrapper">
+              <input
+                class="Input__Text"
+                type="text"
+                placeholder="Codice pratica"
+                id="practiceId"
+              />
+              <input
+                class="Input__Text"
+                type="text"
+                placeholder="Targa"
+                id="nameplate"
+              />
+            </div>
+            <input class="Btn__primary" type="submit" value="Cerca" />
+          </form>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="./script/index.js"></script>
+  </body>
+</html>

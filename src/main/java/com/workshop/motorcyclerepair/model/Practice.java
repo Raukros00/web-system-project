@@ -24,6 +24,15 @@ public class Practice {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(name = "problem_description")
+    private String problemDescription;
+
+    @Column(name = "work_description")
+    private String workDescription;
+
+    @Column(name = "total_hours")
+    private Long totalHours;
+
     @ManyToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
