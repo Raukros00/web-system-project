@@ -31,7 +31,7 @@ public class Practice {
     private String workDescription;
 
     @Column(name = "total_hours")
-    private Long totalHours;
+    private Double totalHours;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id")

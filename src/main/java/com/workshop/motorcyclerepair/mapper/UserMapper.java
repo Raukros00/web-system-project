@@ -1,6 +1,5 @@
 package com.workshop.motorcyclerepair.mapper;
 
-import com.workshop.motorcyclerepair.dto.UpdateUserRequest;
 import com.workshop.motorcyclerepair.dto.UserDTO;
 import com.workshop.motorcyclerepair.model.User;
 import org.mapstruct.Mapper;

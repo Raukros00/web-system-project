@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,7 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7); // rimuove "Bearer "
-        username = jwtService.extractUsername(jwt);
+        try {
+            username = jwtService.extractUsername(jwt);
+        } catch (Exception e) {
+            throw new BadCredentialsException("Token JWT malformato", e);
+        }
 
         // Se non c'è già un'autenticazione in corso
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -57,6 +62,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // Setta l'autenticazione nello Spring Security Context
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                throw new BadCredentialsException("Token JWT non valido");
             }
         }
 

@@ -15,6 +15,7 @@ body {
 
 :root {
   --main-color: #fff37a;
+  --secondary-color: #f1c140;
   --balck: #242529;
   --grey: #393a40;
   --white: #f8eddf;
@@ -217,7 +218,7 @@ body {
 }
 
 .Btn__primary {
-  padding: 0.8rem 0.4rem;
+  padding: 0.8rem 0.9375rem;
   border-radius: 0.25rem;
   border: 1px solid var(--main-color);
   background-color: var(--main-color);
@@ -228,9 +229,9 @@ body {
   transition: all 0.3s;
 }
 
-.Btn:hover {
-  border-color: var(--main-color);
-  background-color: var(--main-color);
+.Btn__primary:hover {
+  border-color: var(--secondary-color);
+  background-color: var(--secondary-color);
   color: var(--balck);
 }
 /** END INPUT **/
@@ -308,13 +309,13 @@ body {
 }
 
 .Status__label.IN_PROGRESS {
-  border-color: #ffd591;
-  background-color: #ffe9bade;
-  color: #d46b08;
+  border-color: #adc6ff;
+  background-color: #f0f5ff;
+  color: #1d39c4;
 }
 
 .Status__label.ACCEPTED {
-  border-color: #ffa39e;
-  background-color: #fcc9c6de;
-  color: #cf1322;
+  border-color: #ffd591;
+  background-color: #fff7e6;
+  color: #d46b08;
 }

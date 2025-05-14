@@ -3,7 +3,7 @@ CREATE TABLE practice (
     status VARCHAR(255),
     problem_description TEXT,
     work_description TEXT,
-    total_hours DOUBLE,
+    total_hours DOUBLE DEFAULT 0,
     vehicle_id BIGINT,
     customer_id BIGINT,
     CONSTRAINT fk_practice_vehicle FOREIGN KEY (vehicle_id) REFERENCES vehicle(id),

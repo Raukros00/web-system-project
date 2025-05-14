@@ -89,19 +89,76 @@ hr {
   border: none;
 }
 
-.Editor__card {
+.Editor__wrapper {
   width: 100%;
-  height: auto;
-  margin-top: 2rem;
-  padding: 1rem 2rem;
   display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.Progress__container {
+  width: 100%;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  background: var(--main-color);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(6.6px);
-  -webkit-backdrop-filter: blur(6.6px);
-  border: 1px solid rgba(255, 243, 122, 0.52);
-  color: #111;
+  position: relative;
+}
+
+.Progress__bar {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background-color: #dedede;
+  z-index: -1;
+}
+
+.progress {
+  position: absolute;
+  height: 100%;
+  background-color: var(--secondary-color);
+  transition: 300ms ease;
+}
+
+.step {
+  background-color: #dedede;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.625rem 0.9375rem;
+  border-radius: 0.5rem;
+  transition: 200ms ease;
+  transition-delay: 0ms;
+  cursor: pointer;
+}
+
+.step.active {
+  background-color: var(--secondary-color);
+  transition-delay: 100ms;
+}
+
+.Input__container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+}
+
+.Input__container label {
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.Input__container input {
+  width: 100%;
+}
+
+.Input__container textarea {
+  width: 100%;
+  height: 12.5rem;
+  resize: none;
+}
+
+.Save__container {
+  width: 100%;
+  display: flex;
+  justify-content: end;
 }

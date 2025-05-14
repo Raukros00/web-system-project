@@ -2,8 +2,11 @@ package com.workshop.motorcyclerepair.controller;
 
 import com.workshop.motorcyclerepair.dto.practice.NewPracticeRequestDTO;
 import com.workshop.motorcyclerepair.dto.practice.PracticeDTO;
+import com.workshop.motorcyclerepair.dto.practice.UpdatePracticeRequestDTO;
 import com.workshop.motorcyclerepair.service.PracticeService;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -32,6 +35,13 @@ public class PracticeController {
     @GetMapping("/{id}")
     public ResponseEntity<PracticeDTO> getPracticeById(@PathVariable Long id) {
         return ResponseEntity.ok().body(practiceService.getPracticeById(id));
+    }
+
+    @PreAuthorize("@roleChecker.hasRole({'MECHANIC'})")
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updatePracticeById(@PathVariable Long id, @RequestBody UpdatePracticeRequestDTO practice) throws BadRequestException {
+        practiceService.updatePracticeById(id, practice);
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("@roleChecker.hasRole({'MECHANIC'})")

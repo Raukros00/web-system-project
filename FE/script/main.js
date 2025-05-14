@@ -55,6 +55,10 @@ const httpRequest = async (method, path, body = null) => {
     );
   }
 
+  if (response.status === 204) {
+    return null;
+  }
+
   return response.json();
 };
 
@@ -78,6 +82,7 @@ export const checkTokenValidity = async () => {
 export const HTTP_GET = (path) => httpRequest("GET", path);
 export const HTTP_POST = (path, body) => httpRequest("POST", path, body);
 export const HTTP_PUT = (path, body) => httpRequest("PUT", path, body);
+export const HTTP_PATCH = (path, body) => httpRequest("PATCH", path, body);
 export const HTTP_DELETE = (path) => httpRequest("DELETE", path);
 
 /** END NETWORKS UTILS **/
@@ -151,7 +156,18 @@ export const genStatusLabel = (status) => {
   const statusLabel = document.createElement("span");
 
   statusLabel.className = `Status__label ${status}`;
-  statusLabel.textContent = status;
+
+  switch (status) {
+    case "ACCEPTED":
+      statusLabel.textContent = "ACCETTATA";
+      break;
+    case "IN_PROGRESS":
+      statusLabel.textContent = "IN LAVORAZIONE";
+      break;
+    case "COMPLETED":
+      statusLabel.textContent = "COMPLETATA";
+      break;
+  }
 
   return statusLabel;
 };

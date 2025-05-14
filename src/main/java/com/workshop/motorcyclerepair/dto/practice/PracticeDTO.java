@@ -11,7 +11,7 @@ public class PracticeDTO {
     private Status status;
     private String problemDescription;
     private String workDescription;
-    private Long totalHours;
+    private Double totalHours;
     private VehiclePracticeDTO vehicle;
     private CustomerDTO customer;
 }
