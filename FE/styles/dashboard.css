@@ -29,6 +29,7 @@
 
 .Menu__container {
   margin-top: 3rem;
+  position: relative;
 }
 
 .Menu__container ul {
@@ -47,13 +48,29 @@
   transition: all 0.3s ease-in-out;
   display: flex;
   gap: 0.3rem;
+  border-radius: 0.5rem;
 }
 
 .Menu__container ul > li:hover,
+.Logout__container:hover,
 .active {
   background-color: var(--main-color);
   color: #111;
   border-radius: 0.5rem;
+}
+
+.Logout__container {
+  position: absolute;
+  bottom: 3rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  gap: 0.3rem;
+  color: var(--white);
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .Main {

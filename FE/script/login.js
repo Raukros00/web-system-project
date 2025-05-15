@@ -1,4 +1,26 @@
-import { Loader, HTTP_POST } from "./main.js";
+import {
+  Loader,
+  HTTP_GET,
+  HTTP_POST,
+  getCookie,
+  clearAllCookies,
+} from "./main.js";
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const token = getCookie("token");
+
+  if (!token) {
+    clearAllCookies();
+    return;
+  }
+
+  try {
+    await HTTP_GET("auth/profile");
+    window.location.href = "/dashboard.html";
+  } catch (err) {
+    clearAllCookies;
+  }
+});
 
 const login = (e) => {
   e.preventDefault();

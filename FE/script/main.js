@@ -20,10 +20,17 @@ export const clearContainer = (container) => {
 
 /** START NETWORKS UTILS **/
 
-const getCookie = (name) => {
+export const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(";").shift();
+};
+
+export const clearAllCookies = () => {
+  document.cookie.split(";").forEach((cookie) => {
+    const name = cookie.split("=")[0].trim();
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  });
 };
 
 const httpRequest = async (method, path, body = null) => {
@@ -66,7 +73,7 @@ export const checkTokenValidity = async () => {
   const token = getCookie("token");
 
   if (!token) {
-    document.cookie = null;
+    clearAllCookies();
     window.location.href = "/login.html";
     return;
   }
