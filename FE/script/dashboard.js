@@ -61,8 +61,8 @@ const populateMenu = (menuItems) => {
 const buildMechanicDashboard = async () => {
   const menu = [
     {
-      label: "Home",
-      iconName: "home",
+      label: "Pratiche",
+      iconName: "folder_open",
       navAction: () => buildMechanicPracticesList(),
       active: true,
     },
@@ -80,8 +80,8 @@ const buildMechanicDashboard = async () => {
 const buildAcceptanceAgentDashboard = async () => {
   const menu = [
     {
-      label: "Home",
-      iconName: "home",
+      label: "Pratiche",
+      iconName: "folder_open",
       navAction: () => buildMechanicPracticesList(),
       active: true,
     },
@@ -92,7 +92,7 @@ const buildAcceptanceAgentDashboard = async () => {
     },
     {
       label: "Motori",
-      iconName: "motorcycle",
+      iconName: "settings",
       navAction: () => buildMechanicCompletedPractices(),
     },
   ];
