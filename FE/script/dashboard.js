@@ -11,6 +11,8 @@ import {
   buildMechanicCompletedPractices,
 } from "./mechanic.js";
 
+import { buildCustomersList } from "./acceptance.js";
+
 window.addEventListener("DOMContentLoaded", async () => {
   await checkTokenValidity();
 
@@ -88,7 +90,7 @@ const buildAcceptanceAgentDashboard = async () => {
     {
       label: "Clienti",
       iconName: "group",
-      navAction: () => buildMechanicCompletedPractices(),
+      navAction: () => buildCustomersList(),
     },
     {
       label: "Motori",

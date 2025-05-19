@@ -179,3 +179,44 @@ hr {
   display: flex;
   justify-content: end;
 }
+
+.Filters__container {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.Table__container {
+  width: 100%;
+  margin-top: 3rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+table {
+  width: 100%;
+  border-radius: 0.75rem;
+  border-spacing: 0;
+  border: 0;
+  overflow: hidden;
+}
+
+thead {
+  background-color: var(--secondary-color);
+}
+
+thead tr th,
+tbody tr td {
+  padding: 0.625rem;
+  border: 0.1px solid #ccc;
+}
+
+tbody {
+  color: var(--grey);
+  font-size: 18px;
+  text-align: center;
+  background-color: var(--white);
+}

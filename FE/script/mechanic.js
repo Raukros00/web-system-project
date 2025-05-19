@@ -13,6 +13,7 @@ const pageTitle = document.querySelector("#pageTitle");
 const loader = Loader();
 
 export const buildMechanicPracticesList = async () => {
+  pageTitle.textContent = "Pratiche";
   clearContainer(MAIN);
 
   MAIN.appendChild(loader);
@@ -22,6 +23,7 @@ export const buildMechanicPracticesList = async () => {
 };
 
 export const buildMechanicCompletedPractices = async () => {
+  pageTitle.textContent = "Pratiche complete";
   clearContainer(MAIN);
 
   MAIN.appendChild(loader);
@@ -179,7 +181,6 @@ const genFormPracticeEditor = (practice) => {
   return editorCard;
 };
 
-//TODO Aggiungere popup di conferma
 const genProgressContainer = (status) => {
   const progressContainer = document.createElement("div");
   const acceptedLabel = document.createElement("span");
