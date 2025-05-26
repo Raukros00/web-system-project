@@ -1,6 +1,7 @@
 package com.workshop.motorcyclerepair.controller;
 
 import com.workshop.motorcyclerepair.dto.customer.CustomerDTO;
+import com.workshop.motorcyclerepair.dto.customer.FilterCustomerDTO;
 import com.workshop.motorcyclerepair.dto.customer.NewCustomerRequestDTO;
 import com.workshop.motorcyclerepair.repository.specification.CustomerSpecification;
 import com.workshop.motorcyclerepair.service.CustomerService;
@@ -25,7 +26,7 @@ public class CustomerController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<CustomerDTO>> getCustomerList(CustomerDTO filter) {
+    public ResponseEntity<List<CustomerDTO>> getCustomerList(FilterCustomerDTO filter) {
         return ResponseEntity.ok().body(customerService.getCustomerList(filter));
     }
 

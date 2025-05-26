@@ -27,6 +27,22 @@ body {
   font-size: 1.3rem;
 }
 
+.w-20 {
+  width: 20% !important;
+}
+
+.w-40 {
+  width: 40% !important;
+}
+
+.w-50 {
+  width: 50% !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
 /** START LOADER **/
 
 .loader {
@@ -213,11 +229,23 @@ body {
   outline: 0;
 }
 
+select.Input__Text {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  height: 3rem;
+}
+
 .Input__Text:autofill {
   background-color: transparent !important;
 }
 
 .Btn__primary {
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.3125rem;
   padding: 0.8rem 0.9375rem;
   border-radius: 0.25rem;
   border: 1px solid var(--main-color);
@@ -229,11 +257,31 @@ body {
   transition: all 0.3s;
 }
 
-.Btn__primary:hover {
+.Btn__primary:hover,
+.Btn__secondary:hover {
   border-color: var(--secondary-color);
   background-color: var(--secondary-color);
   color: var(--balck);
 }
+
+.Btn__secondary {
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.3125rem;
+  padding: 0.8rem 0.9375rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--main-color);
+  background-color: transparent;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--main-color);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
 /** END INPUT **/
 
 .Status__card {

@@ -44,9 +44,19 @@ public class SecurityConfig {
                         .defaultAuthenticationEntryPointFor(securityExceptionHandler, new AntPathRequestMatcher("/**"))
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/public/**", "/practice/search").permitAll()
+                        .requestMatchers(
+                                "/auth/**",           // include /auth/register
+                                "/public/**",
+                                "/practice/search",
+                                "/",                  // homepage se presente
+                                "/*.html",        // entrypoint SPA
+                                "/script/**",         // JS frontend
+                                "/styles/**",            // CSS frontend
+                                "/images/**"          // immagini
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .userDetailsService(customUserDetailsService)
                 .build();
@@ -55,7 +65,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://127.0.0.1:5500"));
+        config.setAllowedOriginPatterns(List.of("*")); //DEV ONLY
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

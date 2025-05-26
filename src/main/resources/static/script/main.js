@@ -56,10 +56,17 @@ const httpRequest = async (method, path, body = null) => {
   const response = await fetch(`${BASER_URL}/${path}`, options);
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `HTTP ${method} ${path} failed: ${response.status} - ${errorText}`
-    );
+    let errorData;
+    try {
+      errorData = await response.json();
+    } catch {
+      errorData = { error: "UNKNOWN", description: "Unknown error" };
+    }
+
+    throw {
+      status: response.status,
+      ...errorData,
+    };
   }
 
   if (response.status === 204) {
@@ -194,3 +201,18 @@ export const genLabelAndValue = (label, value) => {
 };
 
 /** END COMPONENTS **/
+
+/** START UTILS **/
+
+export const dateFormatter = (date) => {
+  const newDate = new Date(date);
+
+  // Estrai giorno, mese, anno con padding
+  const day = String(newDate.getDate()).padStart(2, "0");
+  const month = String(newDate.getMonth() + 1).padStart(2, "0"); // +1 perché i mesi partono da 0
+  const year = newDate.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+
+/** END UTILS **/
