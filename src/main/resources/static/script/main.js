@@ -170,20 +170,20 @@ export const genStatusLabel = (status) => {
   const statusLabel = document.createElement("span");
 
   statusLabel.className = `Status__label ${status}`;
-
-  switch (status) {
-    case "ACCEPTED":
-      statusLabel.textContent = "ACCETTATA";
-      break;
-    case "IN_PROGRESS":
-      statusLabel.textContent = "IN LAVORAZIONE";
-      break;
-    case "COMPLETED":
-      statusLabel.textContent = "COMPLETATA";
-      break;
-  }
+  statusLabel.textContent = mapStatusLabel(status);
 
   return statusLabel;
+};
+
+export const mapStatusLabel = (status) => {
+  switch (status) {
+    case "ACCEPTED":
+      return "ACCETTATA";
+    case "IN_PROGRESS":
+      return "IN LAVORAZIONE";
+    case "COMPLETED":
+      return "COMPLETATA";
+  }
 };
 
 export const genLabelAndValue = (label, value) => {

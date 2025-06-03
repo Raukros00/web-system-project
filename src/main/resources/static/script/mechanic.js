@@ -17,7 +17,9 @@ export const buildMechanicPracticesList = async () => {
   clearContainer(MAIN);
 
   MAIN.appendChild(loader);
-  const practicesList = await HTTP_GET("practice/");
+  const practicesList = await HTTP_GET(
+    "practice/?status=ACCEPTED&status=IN_PROGRESS"
+  );
   loader.remove();
   buildPracticesList(practicesList);
 };
@@ -27,7 +29,7 @@ export const buildMechanicCompletedPractices = async () => {
   clearContainer(MAIN);
 
   MAIN.appendChild(loader);
-  const practicesList = await HTTP_GET("practice/completed");
+  const practicesList = await HTTP_GET("practice/?status=COMPLETED");
   loader.remove();
   buildPracticesList(practicesList);
 };

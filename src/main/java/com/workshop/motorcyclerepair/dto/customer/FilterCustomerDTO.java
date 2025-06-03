@@ -1,10 +1,12 @@
 package com.workshop.motorcyclerepair.dto.customer;
 
-import java.util.Date;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 public record FilterCustomerDTO(
-        String callsign,
+        String nameOrSurname,
         String email,
         String phoneNumber,
-        Date birthdate
+        LocalDate birthDate
 ) { }

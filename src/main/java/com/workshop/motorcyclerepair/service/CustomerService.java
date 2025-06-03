@@ -40,8 +40,8 @@ public class CustomerService {
     private static Specification<Customer> createCustomerSpecification(FilterCustomerDTO filter) {
         Specification<Customer> spec = Specification.where(null);
 
-        if(!StringUtil.isNullOrEmpty(filter.callsign())) {
-            spec = spec.and(CustomerSpecification.hasCallsign(filter.callsign()));
+        if(!StringUtil.isNullOrEmpty(filter.nameOrSurname())) {
+            spec = spec.and(CustomerSpecification.hasNameOrSurname(filter.nameOrSurname()));
         }
 
         if(!Objects.isNull(filter.email())) {
@@ -53,8 +53,8 @@ public class CustomerService {
         }
 
 
-        if(!Objects.isNull(filter.birthdate())) {
-            spec = spec.and(CustomerSpecification.hasBirthDate(filter.birthdate()));
+        if(!Objects.isNull(filter.birthDate())) {
+            spec = spec.and(CustomerSpecification.hasBirthDate(filter.birthDate()));
         }
 
         return spec;

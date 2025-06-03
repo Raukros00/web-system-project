@@ -1,12 +1,12 @@
 package com.workshop.motorcyclerepair.controller;
 
+import com.workshop.motorcyclerepair.dto.practice.FilterPracticeDTO;
 import com.workshop.motorcyclerepair.dto.practice.NewPracticeRequestDTO;
 import com.workshop.motorcyclerepair.dto.practice.PracticeDTO;
 import com.workshop.motorcyclerepair.dto.practice.UpdatePracticeRequestDTO;
 import com.workshop.motorcyclerepair.service.PracticeService;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.BadRequestException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -21,14 +21,16 @@ public class PracticeController {
 
     private final PracticeService practiceService;
 
+    @PreAuthorize("@roleChecker.hasRole({'ACCEPTANCE_AGENT'})")
     @PostMapping("/")
     public ResponseEntity<PracticeDTO> addNewPractice(@RequestBody NewPracticeRequestDTO newPracticeRequestDTO) {
             return ResponseEntity.ok().body(practiceService.addNewPractice(newPracticeRequestDTO));
     }
-    @PreAuthorize("@roleChecker.hasRole({'MECHANIC'})")
+
+    @PreAuthorize("@roleChecker.hasAnyRole({'MECHANIC', 'ACCEPTANCE_AGENT'})")
     @GetMapping("/")
-    public ResponseEntity<List<PracticeDTO>> getIncompletePracticesList() {
-        return ResponseEntity.ok().body(practiceService.getIncompletePracticesList());
+    public ResponseEntity<List<PracticeDTO>> getPracticesList(@ModelAttribute FilterPracticeDTO filter) {
+        return ResponseEntity.ok().body(practiceService.getPracticesList(filter));
     }
 
     @PreAuthorize("@roleChecker.hasRole({'MECHANIC'})")
@@ -44,14 +46,8 @@ public class PracticeController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("@roleChecker.hasRole({'MECHANIC'})")
-    @GetMapping("/completed")
-    public ResponseEntity<List<PracticeDTO>> getCompletedPracticesList() {
-        return ResponseEntity.ok().body(practiceService.getCompletedPracticesList());
-    }
-
     @GetMapping("/search")
-    public ResponseEntity<PracticeDTO> searchPractice(@RequestParam Long practiceId ,@RequestParam String nameplate) {
+    public ResponseEntity<PracticeDTO> searchPractice(@RequestParam Long practiceId, @RequestParam String nameplate) {
         return ResponseEntity.ok().body(practiceService.searchPractice(practiceId, nameplate));
     }
 

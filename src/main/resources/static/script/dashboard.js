@@ -11,7 +11,11 @@ import {
   buildMechanicCompletedPractices,
 } from "./mechanic.js";
 
-import { buildCustomersList, buildVehicleList } from "./acceptance.js";
+import {
+  buildCustomersList,
+  buildPracticesList,
+  buildVehicleList,
+} from "./acceptance.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
   await checkTokenValidity();
@@ -84,7 +88,7 @@ const buildAcceptanceAgentDashboard = async () => {
     {
       label: "Pratiche",
       iconName: "folder_open",
-      navAction: () => buildMechanicPracticesList(),
+      navAction: () => buildPracticesList(),
       active: true,
     },
     {
@@ -100,4 +104,5 @@ const buildAcceptanceAgentDashboard = async () => {
   ];
 
   populateMenu(menu);
+  buildPracticesList();
 };

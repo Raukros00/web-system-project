@@ -3,7 +3,6 @@ package com.workshop.motorcyclerepair.controller;
 import com.workshop.motorcyclerepair.dto.customer.CustomerDTO;
 import com.workshop.motorcyclerepair.dto.customer.FilterCustomerDTO;
 import com.workshop.motorcyclerepair.dto.customer.NewCustomerRequestDTO;
-import com.workshop.motorcyclerepair.repository.specification.CustomerSpecification;
 import com.workshop.motorcyclerepair.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/customer")
@@ -26,7 +24,7 @@ public class CustomerController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<CustomerDTO>> getCustomerList(FilterCustomerDTO filter) {
+    public ResponseEntity<List<CustomerDTO>> getCustomerList(@ModelAttribute FilterCustomerDTO filter) {
         return ResponseEntity.ok().body(customerService.getCustomerList(filter));
     }
 
