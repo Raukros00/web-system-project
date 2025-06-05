@@ -6,6 +6,7 @@ import {
   dateFormatter,
   genIcon,
   genStatusLabel,
+  mapStatusLabel,
 } from "./main.js";
 
 const MAIN = document.querySelector(".Main__Container");
@@ -622,7 +623,7 @@ export const buildPracticesList = async () => {
   newPracticeBtn.className = "Btn__primary";
   newPracticeBtn.append("Nuova pratica", genIcon("add"));
 
-  const form = await genNewVehicleForm();
+  const form = await genNewPracticeForm();
 
   newPracticeBtn.addEventListener("click", () =>
     APP_CONTAINER.appendChild(genModal("Nuova Pratica", form))
@@ -631,10 +632,13 @@ export const buildPracticesList = async () => {
   const brands = await HTTP_GET("vehicle/brands");
   const status = ["ACCEPTED", "IN_PROGRESS", "COMPLETED"];
 
-  MAIN.append(
+  tableHeader.append(
     genPracticeFilters(brands, status, getModelsByBrand),
-    genTable(tableColumns)
+    newPracticeBtn
   );
+
+  MAIN.append(tableHeader, genTable(tableColumns));
+
   loadDataTablePractice(practices);
 };
 
@@ -660,9 +664,149 @@ const loadDataTablePractice = (practices) => {
   });
 };
 
-const genMultiSelect = (labelText, options = []) => {
+const genNewPracticeForm = async () => {
+  const form = document.createElement("div");
+  const clientPlateRow = document.createElement("div");
+  const descriptionRow = document.createElement("div");
+  const actionButtons = document.createElement("div");
+
+  clientPlateRow.className = "Row";
+  descriptionRow.className = "Row";
+  actionButtons.className = "Action__buttons";
+
+  const cancelBtn = document.createElement("button");
+  const createBtn = document.createElement("button");
+
+  cancelBtn.textContent = "Annulla";
+  createBtn.textContent = "Crea";
+
+  cancelBtn.className = "Btn__secondary";
+  createBtn.className = "Btn__primary";
+
+  const customerContainer = document.createElement("div");
+  customerContainer.className = "Input__container w-100";
+
+  const customerLabel = document.createElement("label");
+  customerLabel.textContent = "Cliente";
+
+  const customerSelect = document.createElement("select");
+  customerSelect.id = "customerSelect";
+  customerSelect.className = "Input__Text";
+
+  const defaultCustomerOption = document.createElement("option");
+  defaultCustomerOption.value = "";
+  defaultCustomerOption.textContent = "Seleziona un cliente";
+  customerSelect.appendChild(defaultCustomerOption);
+
+  const customers = await getCustomers();
+  customers.forEach((client) => {
+    const option = document.createElement("option");
+    option.value = client.id;
+    option.textContent = `${client.firstName} ${client.lastName}`;
+    customerSelect.appendChild(option);
+  });
+
+  customerContainer.append(customerLabel, customerSelect);
+
+  const plateContainer = document.createElement("div");
+  plateContainer.className = "Input__container w-100";
+
+  const plateLabel = document.createElement("label");
+  plateLabel.textContent = "Targa";
+
+  const plateSelect = document.createElement("select");
+  plateSelect.id = "plateSelect";
+  plateSelect.className = "Input__Text";
+
+  const defaultPlateOption = document.createElement("option");
+  defaultPlateOption.value = "";
+  defaultPlateOption.textContent = "Seleziona un veicolo";
+  plateSelect.appendChild(defaultPlateOption);
+
+  plateContainer.append(plateLabel, plateSelect);
+
+  const descriptionContainer = document.createElement("div");
+  descriptionContainer.className = "Input__container w-100";
+
+  const descriptionLabel = document.createElement("label");
+  descriptionLabel.textContent = "Descrizione del problema";
+
+  const descriptionTextarea = document.createElement("textarea");
+  descriptionTextarea.className = "Input__Text";
+  descriptionTextarea.rows = 4;
+  descriptionTextarea.placeholder = "Descrivi il problema...";
+
+  descriptionContainer.append(descriptionLabel, descriptionTextarea);
+
+  clientPlateRow.append(customerContainer, plateContainer);
+  descriptionRow.append(descriptionContainer);
+  actionButtons.append(cancelBtn, createBtn);
+  form.append(clientPlateRow, descriptionRow, actionButtons);
+
+  customerSelect.addEventListener("change", async () => {
+    const clienteId = customerSelect.value;
+
+    plateSelect.innerHTML = "";
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Seleziona un veicolo";
+    plateSelect.appendChild(defaultOption);
+
+    if (!clienteId) return;
+
+    const clientVehicles = await getVehiclesByClientId(clienteId);
+    clientVehicles.forEach((vehicle) => {
+      const option = document.createElement("option");
+      option.value = vehicle.nameplate;
+      option.textContent = `${vehicle.brand} ${vehicle.model} (${vehicle.nameplate})`;
+      plateSelect.appendChild(option);
+    });
+  });
+
+  cancelBtn.addEventListener("click", () => MODAL.remove());
+  createBtn.addEventListener("click", async () => {
+    const clientId = customerSelect.value;
+    const nameplate = plateSelect.value;
+    const problemDescription = descriptionTextarea.value.trim();
+
+    if (!clientId || !nameplate || !problemDescription) {
+      const error = document.createElement("p");
+      error.className = "Error__message";
+      error.textContent = "Tutti i campi sono obbligatori.";
+      form.insertBefore(error, actionButtons);
+      return;
+    }
+
+    try {
+      await createPractice({ nameplate, problemDescription });
+      MODAL.remove();
+      clearContainer(document.querySelector("tbody"));
+      const practices = await getPractices();
+      loadDataTablePractice(practices);
+    } catch (e) {
+      const error = document.createElement("p");
+      error.className = "Error__message";
+      error.textContent =
+        e.description || "Errore nella creazione della pratica.";
+      form.insertBefore(error, actionButtons);
+    }
+  });
+
+  return form;
+};
+
+const createPractice = async (newPractice) => {
+  return await HTTP_POST("practice/", newPractice);
+};
+
+const getVehiclesByClientId = async (clienteId) => {
+  return await HTTP_GET(`vehicle/?customerId=${clienteId}`);
+};
+
+const genMultiSelect = (idMultiSelect, labelText, options = []) => {
   const container = document.createElement("div");
   container.className = "Input__container w-100";
+  container.id = idMultiSelect;
 
   const label = document.createElement("label");
   label.textContent = labelText;
@@ -691,12 +835,15 @@ const genMultiSelect = (labelText, options = []) => {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.value = option;
-    labelOption.append(checkbox, document.createTextNode(" " + option));
+    labelOption.append(
+      checkbox,
+      document.createTextNode(" " + mapStatusLabel(option))
+    );
 
     checkbox.addEventListener("change", () => {
       const selected = Array.from(
         optionsContainer.querySelectorAll("input[type='checkbox']:checked")
-      ).map((cb) => cb.value);
+      ).map((cb) => mapStatusLabel(cb.value));
       selectedSpan.textContent = selected.length
         ? selected.join(", ")
         : `Seleziona ${labelText.toLowerCase()}`;
@@ -710,7 +857,6 @@ const genMultiSelect = (labelText, options = []) => {
       optionsContainer.style.display === "block" ? "none" : "block";
   });
 
-  // Chiudi dropdown se clicchi fuori
   document.addEventListener("click", (e) => {
     if (!multiselect.contains(e.target)) {
       optionsContainer.style.display = "none";
@@ -728,7 +874,6 @@ const genPracticeFilters = (brands = [], states = [], getModelsByBrand) => {
   const filterContainer = document.createElement("div");
   filterContainer.className = "Filters__container";
 
-  // Nominativo input
   const nameFilter = document.createElement("div");
   nameFilter.className = "Input__container w-100";
   const nameLabel = document.createElement("label");
@@ -737,9 +882,9 @@ const genPracticeFilters = (brands = [], states = [], getModelsByBrand) => {
   nameInput.type = "text";
   nameInput.id = "nameFilter";
   nameInput.className = "Input__Text";
+  nameInput.textContent = "Mario Rossi";
   nameFilter.append(nameLabel, nameInput);
 
-  // Marchio select
   const brandFilter = document.createElement("div");
   brandFilter.className = "Input__container w-100";
   const brandLabel = document.createElement("label");
@@ -762,7 +907,6 @@ const genPracticeFilters = (brands = [], states = [], getModelsByBrand) => {
 
   brandFilter.append(brandLabel, brandSelect);
 
-  // Modello select (popolata al cambio marchio)
   const modelFilter = document.createElement("div");
   modelFilter.className = "Input__container w-100";
   const modelLabel = document.createElement("label");
@@ -780,7 +924,6 @@ const genPracticeFilters = (brands = [], states = [], getModelsByBrand) => {
 
   brandSelect.addEventListener("change", async () => {
     const selectedBrand = brandSelect.value;
-    // Svuota modello
     modelSelect.innerHTML = "";
     modelSelect.appendChild(defaultModelOption);
 
@@ -795,12 +938,69 @@ const genPracticeFilters = (brands = [], states = [], getModelsByBrand) => {
     }
   });
 
-  // Stati multi-select custom
-  const statusFilter = genMultiSelect("Stato", states);
+  const statusFilter = genMultiSelect("selectFilter", "Stato", states);
 
-  filterContainer.append(nameFilter, brandFilter, modelFilter, statusFilter);
+  const submit = document.createElement("button");
+  submit.className = "Btn__secondary";
+  submit.type = "submit";
+  submit.append("Cerca", genIcon("search"));
+  submit.addEventListener("click", () => handlePracticesSubmitFilters());
+
+  filterContainer.append(
+    nameFilter,
+    brandFilter,
+    modelFilter,
+    statusFilter,
+    submit
+  );
 
   return filterContainer;
+};
+
+const handlePracticesSubmitFilters = async () => {
+  filters = [];
+
+  const nameOrSurname = document.querySelector("#nameFilter").value;
+  const brand = document.querySelector("#brandFilter").value;
+  const model = document.querySelector("#modelFilter").value;
+  const status = Array.from(
+    document.querySelectorAll(
+      "#selectFilter .options-container input[type='checkbox']:checked"
+    )
+  ).map((cb) => cb.value);
+
+  if (status)
+    filters.push({
+      filterName: "status",
+      filterValue: status,
+    });
+
+  if (nameOrSurname)
+    filters.push({
+      filterName: "nameOrSurname",
+      filterValue: nameOrSurname,
+    });
+
+  if (brand)
+    filters.push({
+      filterName: "brand",
+      filterValue: brand,
+    });
+
+  if (model)
+    filters.push({
+      filterName: "model",
+      filterValue: model,
+    });
+
+  /*if (nameplate)
+    filters.push({
+      filterName: "nameplate",
+      filterValue: nameplate,
+    });*/
+
+  clearContainer(document.querySelector("tbody"));
+  loadDataTablePractice(await getPractices());
 };
 
 /** END PRACTICES SECTION **/

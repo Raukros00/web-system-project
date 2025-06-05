@@ -4,7 +4,13 @@ import ch.qos.logback.core.util.StringUtil;
 import com.workshop.motorcyclerepair.model.Vehicle;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Objects;
+
 public class VehicleSpecification {
+
+    public static Specification<Vehicle> hasCustomerId(Long customerId) {
+        return (((root, query, criteriaBuilder) -> Objects.isNull(customerId) ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("customer").get("id"), customerId)));
+    }
 
     public static Specification<Vehicle> hasNameplate(String nameplate) {
         return ((root, query, criteriaBuilder) -> StringUtil.isNullOrEmpty(nameplate) ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("nameplate"), nameplate.toLowerCase()));

@@ -37,9 +37,9 @@ public class PracticeService {
         Vehicle vehicle = vehicleRepository.findVehicleByNameplate(newPracticeRequestDTO.nameplate())
                 .orElseThrow(() -> new RuntimeException("Vehicle not found"));
 
-
         Practice newPractice = practiceRepository.save(Practice.builder()
                 .status(Status.ACCEPTED)
+                .problemDescription(newPracticeRequestDTO.problemDescription())
                 .vehicle(vehicle)
                 .customer(vehicle.getCustomer())
                 .build()

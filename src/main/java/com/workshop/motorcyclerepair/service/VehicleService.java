@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -66,6 +67,10 @@ public class VehicleService {
 
     private Specification<Vehicle> createVehicleSpecification(FilterVehicleDTO filter) {
         Specification<Vehicle> spec = Specification.where(null);
+
+        if(Objects.nonNull(filter.customerId())) {
+            spec = spec.and(VehicleSpecification.hasCustomerId(filter.customerId()));
+        }
 
         if(!StringUtil.isNullOrEmpty(filter.nameplate())) {
             spec = spec.and(VehicleSpecification.hasNameplate(filter.nameplate()));
