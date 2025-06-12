@@ -221,6 +221,7 @@ thead tr th,
 tbody tr td {
   padding: 1rem;
   border: 0.1px solid #ccc;
+  text-align: -webkit-center;
 }
 
 tbody {
@@ -321,22 +322,24 @@ tbody {
 .options-container {
   display: none;
   position: absolute;
-  top: 100%;
+  top: 110%;
   left: 0;
   right: 0;
   border: 1px solid #ccc;
+  border-radius: 0.25rem;
   background: var(--white);
-  max-height: 150px;
+  max-height: 200px;
   overflow-y: auto;
   z-index: 100;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: calc(100% + 30%);
 }
 
 .options-container label {
   display: flex;
-  padding: 5px 10px;
+  padding: 0.5rem 0.625rem;
   cursor: pointer;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--grey);
 }
 
@@ -345,7 +348,7 @@ tbody {
 }
 
 .options-container label:hover {
-  background-color: #eee;
+  background-color: var(--secondary-color);
 }
 
 .selected {

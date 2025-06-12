@@ -48,3 +48,7 @@
   display: flex;
   justify-content: space-between;
 }
+
+#searchResult {
+  margin-top: 1rem;
+}

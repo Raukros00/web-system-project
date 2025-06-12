@@ -7,6 +7,7 @@ import {
   genIcon,
   genStatusLabel,
   mapStatusLabel,
+  errorHandle,
 } from "./main.js";
 
 const MAIN = document.querySelector(".Main__Container");
@@ -131,10 +132,7 @@ const genNewCustomerForm = () => {
         loadDataTableCustomer(getCustomers());
       })
       .catch((e) => {
-        const error = document.createElement("p");
-        error.className = "Error__message";
-        error.textContent = e.description;
-        form.insertBefore(error, actionButtons);
+        form.insertBefore(errorHandle(`PRACTICE_${e.error}`), actionButtons);
       });
   });
 
@@ -427,10 +425,7 @@ const genNewVehicleForm = async () => {
         });
       })
       .catch((e) => {
-        const error = document.createElement("p");
-        error.className = "Error__message";
-        error.textContent = e.description;
-        form.insertBefore(error, actionButtons);
+        form.insertBefore(errorHandle(`VEHICLES_${e.error}`), actionButtons);
       });
   });
 

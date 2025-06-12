@@ -242,7 +242,7 @@ select.Input__Text {
 .Btn__primary {
   width: auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-shrink: 0;
   gap: 0.3125rem;
@@ -344,10 +344,12 @@ select.Input__Text {
 }
 
 .Status__label {
+  display: block;
   padding: 0.5rem;
   border-radius: 0.5rem;
   border: 2px solid;
-  width: max-content;
+  width: fit-content;
+  white-space: nowrap;
 }
 
 .Status__label.COMPLETED {

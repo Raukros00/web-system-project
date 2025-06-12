@@ -14,7 +14,7 @@ import java.util.function.Function;
 public class JwtService {
 
     private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 ora
-    private static final String SECRET_KEY = "my_super_secret_key_which_should_be_long_enough";
+    private static final String SECRET_KEY = "4p5odkapsgyDPSsx86bq4zTq6cv5iL7PeLpUIrf97POp24kMhYQ61ZKbRWlBhrlX";
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
@@ -33,11 +33,6 @@ public class JwtService {
     public String extractUsername(String token) {
 
         return extractClaim(token, Claims::getSubject);
-    }
-
-    public String extractRole(String token) {
-
-        return extractAllClaims(token).get("role", String.class);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

@@ -3,11 +3,14 @@ package com.workshop.motorcyclerepair.exception;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final String INVALID_ARGUMENTS_ERROR = "One or more arguments are invalid or missing!";
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
@@ -25,11 +28,20 @@ public class GlobalExceptionHandler {
         );
     }
 
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidArguments(MethodArgumentNotValidException e) {
+        return new ResponseEntity<>(
+                new ErrorResponse(HttpStatus.BAD_REQUEST, INVALID_ARGUMENTS_ERROR),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEntityAlreadyExistsException(EntityAlreadyExistsException e) {
         return new ResponseEntity<>(
-                new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage()),
-                HttpStatus.BAD_REQUEST
+                new ErrorResponse(HttpStatus.CONFLICT, e.getMessage()),
+                HttpStatus.CONFLICT
         );
     }
 

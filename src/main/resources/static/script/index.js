@@ -1,4 +1,10 @@
-import { Loader, HTTP_GET, StatusCard } from "./main.js";
+import {
+  Loader,
+  HTTP_GET,
+  StatusCard,
+  clearContainer,
+  errorHandle,
+} from "./main.js";
 
 window.searchPractice = (e) => {
   e.preventDefault();
@@ -6,14 +12,18 @@ window.searchPractice = (e) => {
   const practiceId = document.querySelector("#practiceId").value;
   const nameplate = document.querySelector("#nameplate").value;
 
-  document.querySelector("#searchCard").appendChild(Loader());
+  const resultCard = document.querySelector("#searchResult");
+
+  resultCard.appendChild(Loader());
 
   HTTP_GET(`practice/search?practiceId=${practiceId}&nameplate=${nameplate}`)
     .then((data) => {
-      document.querySelector("#searchCard").appendChild(StatusCard(data));
+      clearContainer(resultCard);
+      resultCard.appendChild(StatusCard(data));
     })
     .catch((e) => {
-      console.log("Errore", e);
+      clearContainer(resultCard);
+      resultCard.appendChild(errorHandle(`PRACTICE_${e.error}`));
     })
     .finally(() => {
       document.querySelector("#loader").remove();

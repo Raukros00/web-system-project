@@ -1,3 +1,5 @@
+import { ERROR_MESSAGES } from "./ERRORS.js";
+
 const BASER_URL = "http://localhost:8080";
 
 export let userProfile = null;
@@ -91,6 +93,16 @@ export const checkTokenValidity = async () => {
     console.warn("Token non valido o scaduto:", err.message);
     window.location.href = "/login.html";
   }
+};
+
+export const errorHandle = (errorCode) => {
+  const textError = ERROR_MESSAGES[errorCode] || "Errore interno!";
+
+  const error = document.createElement("p");
+  error.className = "Error__message";
+  error.textContent = textError;
+
+  return error;
 };
 
 export const HTTP_GET = (path) => httpRequest("GET", path);

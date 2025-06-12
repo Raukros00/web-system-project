@@ -4,6 +4,7 @@ import com.workshop.motorcyclerepair.dto.customer.CustomerDTO;
 import com.workshop.motorcyclerepair.dto.customer.FilterCustomerDTO;
 import com.workshop.motorcyclerepair.dto.customer.NewCustomerRequestDTO;
 import com.workshop.motorcyclerepair.service.CustomerService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,7 @@ public class CustomerController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<CustomerDTO> newCustomer(@RequestBody NewCustomerRequestDTO newCustomerRequestDTO) {
+    public ResponseEntity<CustomerDTO> newCustomer(@RequestBody @Valid NewCustomerRequestDTO newCustomerRequestDTO) {
         return ResponseEntity.ok().body(customerService.addNewCustomer(newCustomerRequestDTO));
     }
 

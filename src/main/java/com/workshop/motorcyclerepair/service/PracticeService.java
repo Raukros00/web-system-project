@@ -40,6 +40,7 @@ public class PracticeService {
         Practice newPractice = practiceRepository.save(Practice.builder()
                 .status(Status.ACCEPTED)
                 .problemDescription(newPracticeRequestDTO.problemDescription())
+                .totalHours(0.0)
                 .vehicle(vehicle)
                 .customer(vehicle.getCustomer())
                 .build()

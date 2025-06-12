@@ -2,6 +2,7 @@ package com.workshop.motorcyclerepair.model;
 
 import com.workshop.motorcyclerepair.utils.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class Practice {
     private String workDescription;
 
     @Column(name = "total_hours")
+    @NotNull
     private Double totalHours;
 
     @ManyToOne

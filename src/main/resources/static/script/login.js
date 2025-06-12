@@ -17,8 +17,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   try {
     await HTTP_GET("auth/profile");
     window.location.href = "/dashboard.html";
-  } catch (err) {
-    clearAllCookies;
+  } catch (e) {
+    clearAllCookies();
   }
 });
 

@@ -5,6 +5,7 @@ import com.workshop.motorcyclerepair.dto.practice.NewPracticeRequestDTO;
 import com.workshop.motorcyclerepair.dto.practice.PracticeDTO;
 import com.workshop.motorcyclerepair.dto.practice.UpdatePracticeRequestDTO;
 import com.workshop.motorcyclerepair.service.PracticeService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class PracticeController {
 
     @PreAuthorize("@roleChecker.hasRole({'ACCEPTANCE_AGENT'})")
     @PostMapping("/")
-    public ResponseEntity<PracticeDTO> addNewPractice(@RequestBody NewPracticeRequestDTO newPracticeRequestDTO) {
+    public ResponseEntity<PracticeDTO> addNewPractice(@RequestBody @Valid NewPracticeRequestDTO newPracticeRequestDTO) {
             return ResponseEntity.ok().body(practiceService.addNewPractice(newPracticeRequestDTO));
     }
 
