@@ -5,9 +5,13 @@ import com.workshop.motorcyclerepair.dto.practice.FilterPracticeDTO;
 import com.workshop.motorcyclerepair.dto.practice.NewPracticeRequestDTO;
 import com.workshop.motorcyclerepair.dto.practice.PracticeDTO;
 import com.workshop.motorcyclerepair.dto.practice.UpdatePracticeRequestDTO;
+import com.workshop.motorcyclerepair.dto.spare.SparePartToUpdateDTO;
+import com.workshop.motorcyclerepair.exception.BadRequestException;
 import com.workshop.motorcyclerepair.exception.NotFoundException;
 import com.workshop.motorcyclerepair.mapper.PracticeMapper;
+import com.workshop.motorcyclerepair.mapper.SparePartMapper;
 import com.workshop.motorcyclerepair.model.Practice;
+import com.workshop.motorcyclerepair.model.UsedSparePart;
 import com.workshop.motorcyclerepair.model.Vehicle;
 import com.workshop.motorcyclerepair.repository.PracticeRepository;
 import com.workshop.motorcyclerepair.repository.VehicleRepository;
@@ -15,13 +19,14 @@ import com.workshop.motorcyclerepair.repository.specification.PracticeSpecificat
 import com.workshop.motorcyclerepair.utils.Status;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @AllArgsConstructor
@@ -30,7 +35,10 @@ public class PracticeService {
     private final PracticeRepository practiceRepository;
     private final VehicleRepository vehicleRepository;
 
-    private final PracticeMapper practiceMapper = PracticeMapper.INSTANCE;
+    private final InventoryService inventoryService;
+
+    private final PracticeMapper practiceMapper;
+    private final SparePartMapper sparePartMapper = SparePartMapper.INSTANCE;
 
     public PracticeDTO addNewPractice(NewPracticeRequestDTO newPracticeRequestDTO)  {
 
@@ -72,7 +80,9 @@ public class PracticeService {
 
 
     @Transactional
-    public void updatePracticeById(Long practiceId, UpdatePracticeRequestDTO practiceRequestDTO) throws BadRequestException {
+    public void updatePracticeById(Long practiceId, UpdatePracticeRequestDTO practiceRequestDTO) {
+        AtomicReference<BigDecimal> totalPrice = new AtomicReference<>(BigDecimal.ZERO);
+
         Practice practice = practiceRepository.findById(practiceId)
                 .orElseThrow(() -> new NotFoundException("Practice not found"));
 
@@ -80,9 +90,38 @@ public class PracticeService {
             throw new BadRequestException("Invalid hours exception");
         }
 
+        List<UsedSparePart> usedSparePartList = new ArrayList<>();
+
+        if(Objects.nonNull(practiceRequestDTO.usedSparePartList()) && !practiceRequestDTO.usedSparePartList().isEmpty()) {
+
+            List<SparePartToUpdateDTO> sparePartToUpdate = practiceRequestDTO.usedSparePartList();
+
+            inventoryService.updateSparePartQuantities(sparePartToUpdate).forEach(sparePart -> {
+
+                SparePartToUpdateDTO matchedSparePart = sparePartToUpdate.stream()
+                        .filter(sp -> sp.id().equals(sparePart.getId()))
+                        .findFirst()
+                        .orElseThrow(() -> new NotFoundException("Spare part not found"));
+
+                usedSparePartList.add(UsedSparePart.builder()
+                        .sparePart(sparePartMapper.toEntity(sparePart))
+                        .priceAtUse(sparePart.getPrice())
+                        .practice(practice)
+                        .quantity(matchedSparePart.quantity())
+                        .build());
+
+
+                totalPrice.updateAndGet(current -> current.add(sparePart.getPrice()));
+            });
+        }
+
+        practice.getUsedSparePartList().clear();
+
         practice.setStatus(practiceRequestDTO.newStatus());
         practice.setTotalHours(practiceRequestDTO.totalHours());
         practice.setWorkDescription(practiceRequestDTO.workDescription());
+        practice.getUsedSparePartList().addAll(usedSparePartList);
+        practice.setTotalPrice(totalPrice.get());
 
         practiceRepository.save(practice);
     }

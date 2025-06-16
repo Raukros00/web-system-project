@@ -6,6 +6,7 @@ CREATE TABLE practice (
     total_hours DOUBLE DEFAULT 0,
     vehicle_id BIGINT,
     customer_id BIGINT,
+    total_price DECIMAL(10, 2) DEFAULT 0.0 NOT NULL,
     CONSTRAINT fk_practice_vehicle FOREIGN KEY (vehicle_id) REFERENCES vehicle(id),
     CONSTRAINT fk_practice_customer FOREIGN KEY (customer_id) REFERENCES customer(id)
 );

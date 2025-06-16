@@ -1,9 +1,14 @@
 package com.workshop.motorcyclerepair.dto.practice;
 import com.workshop.motorcyclerepair.dto.customer.CustomerDTO;
+import com.workshop.motorcyclerepair.dto.spare.UsedSparePartDTO;
 import com.workshop.motorcyclerepair.dto.vehicle.VehicleDTO;
 import com.workshop.motorcyclerepair.dto.vehicle.VehiclePracticeDTO;
+import com.workshop.motorcyclerepair.model.UsedSparePart;
 import com.workshop.motorcyclerepair.utils.Status;
 import lombok.Data;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class PracticeDTO {
@@ -14,4 +19,6 @@ public class PracticeDTO {
     private Double totalHours;
     private VehiclePracticeDTO vehicle;
     private CustomerDTO customer;
+    private List<UsedSparePartDTO> usedSparePartList;
+    private BigDecimal totalPrice;
 }

@@ -5,9 +5,8 @@ import com.workshop.motorcyclerepair.model.Practice;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring", uses = UsedSparePartMapper.class)
 public interface PracticeMapper {
-    PracticeMapper INSTANCE = Mappers.getMapper(PracticeMapper.class);
 
     PracticeDTO toDTO(Practice practice);
     Practice toEntity(PracticeDTO practiceDTO);

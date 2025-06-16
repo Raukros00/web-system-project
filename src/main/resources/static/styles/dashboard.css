@@ -355,3 +355,38 @@ tbody {
   white-space: nowrap;
   display: inline-block;
 }
+
+.SpareSelect__container {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.SpareSelect__container button {
+  height: 3rem;
+}
+
+.Used__SpareParts--list {
+  list-style: none;
+  padding: 0.5rem;
+}
+
+.Used__SpareParts--list li {
+  padding: 0.5rem 0;
+}
+
+.Used__SpareParts--list li button {
+  background: none;
+  color: var(--secondary-color);
+  border-radius: 100%;
+  border: 1px solid var(--secondary-color);
+  padding: 0.1rem 0.3rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
+}
+
+.Used__SpareParts--list li button:hover {
+  background-color: var(--secondary-color);
+  color: var(--white);
+}

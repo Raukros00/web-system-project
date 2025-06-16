@@ -5,6 +5,7 @@ public enum Role {
     ADMIN,
     ACCEPTANCE_AGENT,
     MECHANIC,
+    WAREHOUSE_WORKER,
     USER;
 
     public String asAuthority() {

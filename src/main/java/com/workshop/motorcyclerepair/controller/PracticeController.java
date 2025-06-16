@@ -4,6 +4,7 @@ import com.workshop.motorcyclerepair.dto.practice.FilterPracticeDTO;
 import com.workshop.motorcyclerepair.dto.practice.NewPracticeRequestDTO;
 import com.workshop.motorcyclerepair.dto.practice.PracticeDTO;
 import com.workshop.motorcyclerepair.dto.practice.UpdatePracticeRequestDTO;
+import com.workshop.motorcyclerepair.service.InventoryService;
 import com.workshop.motorcyclerepair.service.PracticeService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

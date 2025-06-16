@@ -49,7 +49,9 @@ const buildPracticeEditor = async (practiceId) => {
 
   loader.remove();
 
-  MAIN.append(genInfoCardPractice(practice), genFormPracticeEditor(practice));
+  const formPracticeEditor = await genFormPracticeEditor(practice);
+
+  MAIN.append(genInfoCardPractice(practice), formPracticeEditor);
 };
 
 const genInfoCardPractice = (practice) => {
@@ -111,7 +113,11 @@ const genInfoCardPractice = (practice) => {
   return infoCard;
 };
 
-const genFormPracticeEditor = (practice) => {
+const getSparePartsAvailable = async () => {
+  return await HTTP_GET("inventory/?isAvailable=true");
+};
+
+const genFormPracticeEditor = async (practice) => {
   const editorCard = document.createElement("div");
   const editorWrapper = document.createElement("div");
   const progressBar = genProgressContainer(practice.status);
@@ -161,6 +167,13 @@ const genFormPracticeEditor = (practice) => {
 
   updatedPractice.newStatus = practice.status;
 
+  const availableSpareParts = await getSparePartsAvailable();
+
+  const sparePartsSelector = genUsedSparePartsSelector(
+    practice,
+    availableSpareParts
+  );
+
   totalHoursWorkedContainer.append(
     totalHoursWorkedLabel,
     totalHoursWorkedInput
@@ -174,6 +187,7 @@ const genFormPracticeEditor = (practice) => {
   editorWrapper.append(
     title,
     progressBar,
+    sparePartsSelector,
     totalHoursWorkedContainer,
     workDescriptionContainer
   );
@@ -181,6 +195,126 @@ const genFormPracticeEditor = (practice) => {
   editorCard.appendChild(editorWrapper);
 
   return editorCard;
+};
+
+const genUsedSparePartsSelector = (practice, availableSpareParts) => {
+  const container = document.createElement("div");
+  const labelSparePart = document.createElement("label");
+
+  container.className = "Input__container";
+  labelSparePart.textContent = "Lista componenti";
+
+  container.appendChild(labelSparePart);
+
+  // Lista pezzi usati
+  const usedSparePartsList = document.createElement("ul");
+  usedSparePartsList.id = "usedSparePartsList";
+  usedSparePartsList.className = "Used__SpareParts--list";
+
+  // Select ricambi
+  const sparePartSelect = document.createElement("select");
+  sparePartSelect.id = "sparePartSelect";
+  sparePartSelect.className = "Input__Text";
+  availableSpareParts.forEach((sparePart) => {
+    const option = document.createElement("option");
+    option.value = sparePart.id;
+    option.textContent = `${sparePart.partName} (x${sparePart.quantity})`;
+    sparePartSelect.appendChild(option);
+  });
+
+  // Bottone aggiungi pezzo
+  const addSparePartBtn = document.createElement("button");
+  addSparePartBtn.textContent = "Aggiungi";
+  addSparePartBtn.type = "button";
+  addSparePartBtn.className = "Btn__secondary";
+
+  // Funzione per renderizzare la lista
+  const renderUsedSparePartsList = () => {
+    usedSparePartsList.innerHTML = "";
+
+    updatedPractice.usedSparePartList.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name} x${item.quantity} `;
+
+      // Bottone rimuovi 1 pezzo
+      const removeBtn = document.createElement("button");
+      removeBtn.textContent = "X";
+      removeBtn.type = "button";
+      removeBtn.addEventListener("click", () => {
+        item.quantity--;
+        if (item.quantity <= 0) {
+          updatedPractice.usedSparePartList =
+            updatedPractice.usedSparePartList.filter((i) => i.id !== item.id);
+        }
+        renderUsedSparePartsList();
+      });
+
+      li.appendChild(removeBtn);
+      usedSparePartsList.appendChild(li);
+    });
+  };
+
+  // Event listener per aggiungere pezzo
+  addSparePartBtn.addEventListener("click", () => {
+    const selectedId = sparePartSelect.value;
+    const selectedName =
+      sparePartSelect.options[sparePartSelect.selectedIndex].text;
+
+    const existing = updatedPractice.usedSparePartList.find(
+      (item) => item.id === selectedId
+    );
+
+    const selectedSparePart = availableSpareParts.find(
+      (item) => item.id === Number(selectedId)
+    );
+
+    const usedSelectedSparePart = practice.usedSparePartList.find(
+      (item) => item.id === Number(selectedId)
+    );
+
+    if (existing) {
+      const usedSelectedSparePartQuantity = usedSelectedSparePart
+        ? usedSelectedSparePart.quantity
+        : 0;
+
+      const isOutOfQuantity =
+        existing.quantity + 1 - usedSelectedSparePartQuantity >
+        selectedSparePart.quantity;
+
+      if (isOutOfQuantity) return;
+
+      existing.quantity++;
+    } else {
+      updatedPractice.usedSparePartList.push({
+        id: selectedId,
+        name: selectedSparePart.partName,
+        quantity: 1,
+      });
+    }
+
+    renderUsedSparePartsList();
+  });
+
+  // Inizializza lista pezzi usati
+  if (practice.usedSparePartList) {
+    updatedPractice.usedSparePartList = practice.usedSparePartList.map(
+      (sp) => ({
+        id: sp.id.toString(),
+        name: sp.sparePartName,
+        quantity: sp.quantity,
+      })
+    );
+    renderUsedSparePartsList();
+  } else {
+    updatedPractice.usedSparePartList = [];
+  }
+
+  const spareSelectContainer = document.createElement("div");
+  spareSelectContainer.className = "SpareSelect__container w-100";
+  spareSelectContainer.append(sparePartSelect, addSparePartBtn);
+
+  container.append(usedSparePartsList, spareSelectContainer);
+  return container;
 };
 
 const genProgressContainer = (status) => {
