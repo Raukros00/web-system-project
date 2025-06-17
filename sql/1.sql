@@ -12,5 +12,5 @@ INSERT INTO user (username, password, first_name, last_name, email, role)
 VALUES ('admin', '$2a$10$is9nZNkh9qHrORYxn9Q8jOYeM4eSM19ZMXqXd369tDduzyQ8N/7pm', 'Alessandro', 'Dominici', 'admin@mail.it', 'ADMIN'),
        ('meccanico', '$2a$10$is9nZNkh9qHrORYxn9Q8jOYeM4eSM19ZMXqXd369tDduzyQ8N/7pm', 'Alessandro', 'Dominici', 'meccanico@mail.it', 'MECHANIC'),
        ('magazziniere', '$2a$10$is9nZNkh9qHrORYxn9Q8jOYeM4eSM19ZMXqXd369tDduzyQ8N/7pm', 'Alessandro', 'Dominici', 'magazziniere@mail.it', 'WAREHOUSE_WORKER'),
-       ('cassiere', '$2a$10$is9nZNkh9qHrORYxn9Q8jOYeM4eSM19ZMXqXd369tDduzyQ8N/7pm', 'Alessandro', 'Dominici', 'cassiere@mail.it', 'CASHIER');;
+       ('cassiere', '$2a$10$is9nZNkh9qHrORYxn9Q8jOYeM4eSM19ZMXqXd369tDduzyQ8N/7pm', 'Alessandro', 'Dominici', 'cassiere@mail.it', 'CASHIER');
 
