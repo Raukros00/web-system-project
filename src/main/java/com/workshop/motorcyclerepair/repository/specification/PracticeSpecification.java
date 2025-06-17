@@ -6,7 +6,6 @@ import com.workshop.motorcyclerepair.model.Practice;
 import com.workshop.motorcyclerepair.model.Vehicle;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.util.List;
 import java.util.Objects;
 

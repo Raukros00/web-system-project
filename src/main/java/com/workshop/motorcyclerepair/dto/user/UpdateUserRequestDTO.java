@@ -1,4 +1,4 @@
-package com.workshop.motorcyclerepair.dto;
+package com.workshop.motorcyclerepair.dto.user;
 
 import com.workshop.motorcyclerepair.utils.Role;
 import jakarta.validation.constraints.Size;

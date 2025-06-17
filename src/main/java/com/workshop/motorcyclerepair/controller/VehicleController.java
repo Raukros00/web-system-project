@@ -1,6 +1,5 @@
 package com.workshop.motorcyclerepair.controller;
 
-
 import com.workshop.motorcyclerepair.dto.vehicle.FilterVehicleDTO;
 import com.workshop.motorcyclerepair.dto.vehicle.NewVehicleRequestDTO;
 import com.workshop.motorcyclerepair.dto.vehicle.VehicleDTO;
@@ -10,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @Controller

@@ -2,9 +2,11 @@ package com.workshop.motorcyclerepair.service;
 
 
 import com.workshop.motorcyclerepair.dto.spare.FilterSparePartDTO;
+import com.workshop.motorcyclerepair.dto.spare.NewSparePartRequestDTO;
 import com.workshop.motorcyclerepair.dto.spare.SparePartDTO;
 import com.workshop.motorcyclerepair.dto.spare.SparePartToUpdateDTO;
 import com.workshop.motorcyclerepair.exception.BadRequestException;
+import com.workshop.motorcyclerepair.exception.EntityAlreadyExistsException;
 import com.workshop.motorcyclerepair.exception.NotFoundException;
 import com.workshop.motorcyclerepair.mapper.SparePartMapper;
 import com.workshop.motorcyclerepair.model.SparePart;
@@ -14,9 +16,9 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -30,6 +32,20 @@ public class InventoryService {
                 .stream()
                 .map(spareMapper::toDto)
                 .toList();
+    }
+
+    public SparePartDTO newSparePart(NewSparePartRequestDTO newSparePartRequestDTO) {
+        if(sparePartRepository.findByPartName(newSparePartRequestDTO.partName()).isPresent()) {
+            throw new EntityAlreadyExistsException("This spare part already exists!");
+        }
+
+        SparePart newSparePart = sparePartRepository.save(SparePart.builder()
+                .partName(newSparePartRequestDTO.partName())
+                .price(newSparePartRequestDTO.price())
+                .quantity(newSparePartRequestDTO.quantity())
+                .build());
+
+        return spareMapper.toDto(newSparePart);
     }
 
     @Transactional
@@ -54,11 +70,33 @@ public class InventoryService {
         return usedSpareParts;
     }
 
+    public SparePartDTO updateSparePart(SparePartToUpdateDTO sparePartToUpdateDTO) {
+        SparePart sparePart = sparePartRepository.findById(sparePartToUpdateDTO.id())
+                .orElseThrow(() -> new NotFoundException("SparePart not found"));
+
+        sparePart.setQuantity(sparePartToUpdateDTO.quantity());
+        sparePart.setPrice(sparePartToUpdateDTO.price());
+
+        return spareMapper.toDto(sparePartRepository.save(sparePart));
+    }
+
     private static Specification<SparePart> createSparePartSpecification(FilterSparePartDTO filter) {
         Specification<SparePart> spec = Specification.where(null);
 
         if(filter.isAvailable()) {
             spec = spec.and(SparePartSpecification.isAvailable());
+        }
+
+        if (Objects.nonNull(filter.id())) {
+            spec = spec.and(SparePartSpecification.hasId(filter.id()));
+        }
+
+        if(Objects.nonNull(filter.partName())) {
+            spec = spec.and(SparePartSpecification.hasPartName(filter.partName()));
+        }
+
+        if(Objects.nonNull(filter.quantity())) {
+            spec = spec.and(SparePartSpecification.hasQuantity(filter.quantity()));
         }
 
         return spec;

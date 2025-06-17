@@ -1,14 +1,14 @@
 package com.workshop.motorcyclerepair.service;
 
-import com.workshop.motorcyclerepair.dto.UpdateUserRequestDTO;
-import com.workshop.motorcyclerepair.dto.UserDTO;
+import com.workshop.motorcyclerepair.dto.user.UpdateUserRequestDTO;
+import com.workshop.motorcyclerepair.dto.user.UserDTO;
 import com.workshop.motorcyclerepair.mapper.UserMapper;
 import com.workshop.motorcyclerepair.model.User;
 import com.workshop.motorcyclerepair.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -19,6 +19,11 @@ public class UserService {
     private final UserMapper userMapper = UserMapper.INSTANCE;
     private final PasswordEncoder passwordEncoder;
 
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toDto)
+                .toList();
+    }
 
     public UserDTO getUserById(Long userId) {
         User user = userRepository.findById(userId)

@@ -3,6 +3,7 @@ import { ERROR_MESSAGES } from "./ERRORS.js";
 const BASER_URL = "http://localhost:8080";
 
 export let userProfile = null;
+export let MODAL;
 
 export const Loader = () => {
   const loaderContainer = document.createElement("div");
@@ -165,7 +166,7 @@ export const StatusCard = (data, staff = false, onClick = null) => {
 
   if (staff) {
     const btn = document.createElement("button");
-    btn.className = "Btn__primary";
+    btn.className = "Btn primary";
     btn.textContent = "Apri pratica";
 
     onClick && btn.addEventListener("click", () => onClick(data.id));
@@ -193,6 +194,8 @@ export const mapStatusLabel = (status) => {
       return "ACCETTATA";
     case "IN_PROGRESS":
       return "IN LAVORAZIONE";
+    case "TO_PAY":
+      return "DA PAGARE";
     case "COMPLETED":
       return "COMPLETATA";
   }
@@ -210,6 +213,86 @@ export const genLabelAndValue = (label, value) => {
 
   container.append(labelText, valueText);
   return container;
+};
+
+export const genModal = (titleValue, body) => {
+  const background = document.createElement("div");
+  const modal = document.createElement("div");
+  const modalHeader = document.createElement("div");
+  const title = document.createElement("h2");
+
+  MODAL = background;
+
+  const closeBtn = genIcon("cancel");
+  background.id = "modal";
+  background.className = "Modal__background";
+  modal.className = "Modal__card";
+  modalHeader.className = "Modal__header";
+
+  title.textContent = titleValue;
+
+  closeBtn.addEventListener("click", () => background.remove());
+
+  modalHeader.append(title, closeBtn);
+
+  modal.append(modalHeader, body);
+  background.appendChild(modal);
+  return background;
+};
+
+export const genTable = (columns = []) => {
+  const tableContainer = document.createElement("div");
+  const table = document.createElement("table");
+  const thead = document.createElement("thead");
+  const trHead = document.createElement("tr");
+  const tbody = document.createElement("tbody");
+
+  tableContainer.className = "Table__container";
+
+  columns.map((columnName) => {
+    const th = document.createElement("th");
+    th.textContent = columnName;
+    trHead.appendChild(th);
+  });
+
+  thead.appendChild(trHead);
+
+  table.append(thead, tbody);
+  tableContainer.appendChild(table);
+
+  return tableContainer;
+};
+
+export const genInputField = (
+  labelValue,
+  inputType,
+  inputId,
+  placeholder,
+  name = "",
+  value = ""
+) => {
+  const container = document.createElement("div");
+  const label = document.createElement("label");
+  const input = document.createElement("input");
+
+  container.className = "Input__container";
+  input.className = "Input__Text";
+
+  label.textContent = labelValue;
+  label.htmlFor = inputId;
+
+  input.type = inputType;
+  input.id = inputId;
+  input.placeholder = placeholder;
+  input.name = name;
+  input.value = value;
+
+  container.append(label, input);
+  return container;
+};
+
+export const genDivider = () => {
+  return document.createElement("hr");
 };
 
 /** END COMPONENTS **/

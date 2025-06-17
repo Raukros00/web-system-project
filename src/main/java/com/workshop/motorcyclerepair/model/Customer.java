@@ -2,16 +2,14 @@ package com.workshop.motorcyclerepair.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "customer")
-@Data
-@ToString
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

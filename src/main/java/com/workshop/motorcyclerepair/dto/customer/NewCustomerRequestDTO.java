@@ -1,9 +1,7 @@
 package com.workshop.motorcyclerepair.dto.customer;
 
 import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDate;
-import java.util.Date;
 
 public record NewCustomerRequestDTO(
         @NotNull(message = "Firstname is required") String firstName,

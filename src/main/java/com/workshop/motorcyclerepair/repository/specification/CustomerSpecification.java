@@ -4,9 +4,7 @@ import ch.qos.logback.core.util.StringUtil;
 import com.workshop.motorcyclerepair.model.Customer;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 public class CustomerSpecification {
@@ -14,7 +12,7 @@ public class CustomerSpecification {
 
     public static Specification<Customer> hasNameOrSurname(String nameOrSurname) {
         return (root, query, criteriaBuilder) -> {
-            if (nameOrSurname == null || nameOrSurname.isBlank()) {
+            if (StringUtil.isNullOrEmpty(nameOrSurname)) {
                 return criteriaBuilder.conjunction();
             }
 

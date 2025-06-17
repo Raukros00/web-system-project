@@ -235,11 +235,15 @@ select.Input__Text {
   height: 3rem;
 }
 
+select.Input__Text option {
+  color: var(--balck) !important;
+}
+
 .Input__Text:autofill {
   background-color: transparent !important;
 }
 
-.Btn__primary {
+.Btn {
   width: auto;
   display: flex;
   justify-content: center;
@@ -248,38 +252,37 @@ select.Input__Text {
   gap: 0.3125rem;
   padding: 0.8rem 0.9375rem;
   border-radius: 0.25rem;
-  border: 1px solid var(--main-color);
-  background-color: var(--main-color);
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--grey);
   cursor: pointer;
+  border: 1px solid;
   transition: all 0.3s;
 }
 
-.Btn__primary:hover,
-.Btn__secondary:hover {
+.Btn.primary {
+  border-color: var(--main-color);
+  background-color: var(--main-color);
+  color: var(--grey);
+}
+
+.Btn.primary:hover,
+.Btn.secondary:hover,
+.Btn.grey:hover {
   border-color: var(--secondary-color);
   background-color: var(--secondary-color);
   color: var(--balck);
 }
 
-.Btn__secondary {
-  width: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-  gap: 0.3125rem;
-  padding: 0.8rem 0.9375rem;
-  border-radius: 0.25rem;
-  border: 1px solid var(--main-color);
+.Btn.secondary {
+  border-color: var(--main-color);
   background-color: transparent;
-  font-size: 1.2rem;
-  font-weight: 700;
   color: var(--main-color);
-  cursor: pointer;
-  transition: all 0.3s;
+}
+
+.Btn.grey {
+  border-color: var(--grey);
+  color: var(--grey);
+  background-color: transparent;
 }
 
 /** END INPUT **/
@@ -343,6 +346,14 @@ select.Input__Text {
   font-size: 1.125rem;
 }
 
+.Info--content p {
+  white-space: pre-line;
+}
+
+.Info--content ul {
+  list-style-position: inside;
+}
+
 .Status__label {
   display: block;
   padding: 0.5rem;
@@ -368,4 +379,15 @@ select.Input__Text {
   border-color: #ffd591;
   background-color: #fff7e6;
   color: #d46b08;
+}
+
+.Status__label.TO_PAY {
+  border-color: #ffa39e;
+  background-color: #fff1f0;
+  color: #cf1322;
+}
+
+.flex-end {
+  height: 100%;
+  justify-content: flex-end;
 }

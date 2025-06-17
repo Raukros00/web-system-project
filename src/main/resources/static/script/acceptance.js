@@ -8,6 +8,10 @@ import {
   genStatusLabel,
   mapStatusLabel,
   errorHandle,
+  genModal,
+  genTable,
+  genInputField,
+  MODAL,
 } from "./main.js";
 
 const MAIN = document.querySelector(".Main__Container");
@@ -16,7 +20,6 @@ const pageTitle = document.querySelector("#pageTitle");
 
 const loader = Loader();
 
-let MODAL;
 let filters = [];
 
 /** CUSTOMERS SECTION **/
@@ -41,11 +44,13 @@ export const buildCustomersList = async () => {
   const newCustomerBtn = document.createElement("button");
 
   tableHeader.className = "Table__header";
-  newCustomerBtn.className = "Btn__primary";
+  newCustomerBtn.className = "Btn primary";
   newCustomerBtn.append("Nuovo cliente", genIcon("add"));
 
+  const form = await genNewCustomerForm();
+
   newCustomerBtn.addEventListener("click", () =>
-    APP_CONTAINER.appendChild(genModal("Nuovo cliente", genNewCustomerForm()))
+    APP_CONTAINER.appendChild(genModal("Nuovo cliente", form))
   );
 
   tableHeader.append(genCustomersFilters(), newCustomerBtn);
@@ -64,8 +69,9 @@ const getCustomers = async () => {
   return await HTTP_GET(`customer/${params}`);
 };
 
-const genNewCustomerForm = () => {
+const genNewCustomerForm = async () => {
   const form = document.createElement("div");
+  const errorSection = document.createElement("div");
   const nameOrSurnameRow = document.createElement("div");
   const birthDatePhoneRow = document.createElement("div");
   const mailRow = document.createElement("div");
@@ -77,8 +83,8 @@ const genNewCustomerForm = () => {
   cancelBtn.textContent = "Annulla";
   createBtn.textContent = "Crea";
 
-  cancelBtn.className = "Btn__secondary";
-  createBtn.className = "Btn__primary";
+  cancelBtn.className = "Btn secondary";
+  createBtn.className = "Btn primary";
 
   nameOrSurnameRow.className = "Row";
   birthDatePhoneRow.className = "Row";
@@ -121,19 +127,44 @@ const genNewCustomerForm = () => {
   mailRow.appendChild(emailInput);
   actionButtons.append(cancelBtn, createBtn);
 
-  form.append(nameOrSurnameRow, birthDatePhoneRow, mailRow, actionButtons);
+  form.append(
+    nameOrSurnameRow,
+    birthDatePhoneRow,
+    mailRow,
+    errorSection,
+    actionButtons
+  );
 
   cancelBtn.addEventListener("click", () => MODAL.remove());
   createBtn.addEventListener("click", async () => {
-    createCustomer()
-      .then(() => {
-        MODAL.remove();
-        clearContainer(document.querySelector("tbody"));
-        loadDataTableCustomer(getCustomers());
-      })
-      .catch((e) => {
-        form.insertBefore(errorHandle(`PRACTICE_${e.error}`), actionButtons);
+    const firstName = firstNameInput.value;
+    const lastName = lastNameInput.value;
+    const birthDate = birthDateInput.value;
+    const phoneNumber = phoneNumberInput.value;
+    const email = emailInput.value;
+
+    if (!firstName || !lastName || !birthDate || !phoneNumber || !email) {
+      clearContainer(errorSection);
+      errorSection.appendChild(errorHandle("ALL_FIELDS_ARE_REQUIRED"));
+      return;
+    }
+
+    try {
+      await createCustomer({
+        firstName,
+        lastName,
+        birthDate,
+        phoneNumber,
+        email,
       });
+      MODAL.remove();
+      clearContainer(document.querySelector("tbody"));
+      const customers = await getCustomers();
+      loadDataTableCustomer(customers);
+    } catch (e) {
+      clearContainer(errorSection);
+      errorSection.appendChild(errorHandle(`PRACTICE_${e.error}`));
+    }
   });
 
   return form;
@@ -185,7 +216,7 @@ const genCustomersFilters = () => {
   emailInput.placeholder = "mario.rossi@mail.it";
   emailLabel.textContent = "Email";
 
-  submit.className = "Btn__secondary";
+  submit.className = "Btn secondary";
   submit.type = "submit";
   submit.append("Cerca", genIcon("search"));
 
@@ -263,21 +294,7 @@ const handleCustomersSubmitFilters = async () => {
   loadDataTableCustomer(await getCustomers());
 };
 
-const createCustomer = async () => {
-  const firstName = document.querySelector("#firstNameInput").value;
-  const lastName = document.querySelector("#lastNameInput").value;
-  const birthDate = document.querySelector("#birthDateInput").value;
-  const phoneNumber = document.querySelector("#phoneNumberInput").value;
-  const email = document.querySelector("#emailInput").value;
-
-  const data = {
-    firstName,
-    lastName,
-    birthDate,
-    phoneNumber,
-    email,
-  };
-
+const createCustomer = async (data) => {
   return await HTTP_POST("customer/", data);
 };
 
@@ -299,7 +316,7 @@ export const buildVehicleList = async () => {
   const newVehicleBtn = document.createElement("button");
 
   tableHeader.className = "Table__header";
-  newVehicleBtn.className = "Btn__primary";
+  newVehicleBtn.className = "Btn primary";
   newVehicleBtn.append("Nuovo motore", genIcon("add"));
 
   const form = await genNewVehicleForm();
@@ -345,8 +362,8 @@ const genNewVehicleForm = async () => {
   cancelBtn.textContent = "Annulla";
   createBtn.textContent = "Crea";
 
-  cancelBtn.className = "Btn__secondary";
-  createBtn.className = "Btn__primary";
+  cancelBtn.className = "Btn secondary";
+  createBtn.className = "Btn primary";
 
   modelBrandRow.className = "Row";
   plateClientRow.className = "Row";
@@ -501,7 +518,7 @@ const genVehicleFilters = (brands = [], getModelsByBrand) => {
   plateInput.placeholder = "AB123CD";
   plateLabel.textContent = "Targa";
 
-  submit.className = "Btn__secondary";
+  submit.className = "Btn secondary";
   submit.type = "submit";
   submit.append("Cerca", genIcon("search"));
   submit.addEventListener("click", () => handleVehiclesSubmitFilters());
@@ -615,7 +632,7 @@ export const buildPracticesList = async () => {
   const newPracticeBtn = document.createElement("button");
 
   tableHeader.className = "Table__header";
-  newPracticeBtn.className = "Btn__primary";
+  newPracticeBtn.className = "Btn primary";
   newPracticeBtn.append("Nuova pratica", genIcon("add"));
 
   const form = await genNewPracticeForm();
@@ -625,7 +642,7 @@ export const buildPracticesList = async () => {
   );
 
   const brands = await HTTP_GET("vehicle/brands");
-  const status = ["ACCEPTED", "IN_PROGRESS", "COMPLETED"];
+  const status = ["ACCEPTED", "IN_PROGRESS", "TO_PAY", "COMPLETED"];
 
   tableHeader.append(
     genPracticeFilters(brands, status, getModelsByBrand),
@@ -661,6 +678,7 @@ const loadDataTablePractice = (practices) => {
 
 const genNewPracticeForm = async () => {
   const form = document.createElement("div");
+  const errorSection = document.createElement("div");
   const clientPlateRow = document.createElement("div");
   const descriptionRow = document.createElement("div");
   const actionButtons = document.createElement("div");
@@ -675,8 +693,8 @@ const genNewPracticeForm = async () => {
   cancelBtn.textContent = "Annulla";
   createBtn.textContent = "Crea";
 
-  cancelBtn.className = "Btn__secondary";
-  createBtn.className = "Btn__primary";
+  cancelBtn.className = "Btn secondary";
+  createBtn.className = "Btn primary";
 
   const customerContainer = document.createElement("div");
   customerContainer.className = "Input__container w-100";
@@ -736,7 +754,7 @@ const genNewPracticeForm = async () => {
   clientPlateRow.append(customerContainer, plateContainer);
   descriptionRow.append(descriptionContainer);
   actionButtons.append(cancelBtn, createBtn);
-  form.append(clientPlateRow, descriptionRow, actionButtons);
+  form.append(clientPlateRow, descriptionRow, errorSection, actionButtons);
 
   customerSelect.addEventListener("change", async () => {
     const clienteId = customerSelect.value;
@@ -765,10 +783,8 @@ const genNewPracticeForm = async () => {
     const problemDescription = descriptionTextarea.value.trim();
 
     if (!clientId || !nameplate || !problemDescription) {
-      const error = document.createElement("p");
-      error.className = "Error__message";
-      error.textContent = "Tutti i campi sono obbligatori.";
-      form.insertBefore(error, actionButtons);
+      clearContainer(errorSection);
+      errorSection.appendChild(errorHandle("ALL_FIELDS_ARE_REQUIRED"));
       return;
     }
 
@@ -779,11 +795,8 @@ const genNewPracticeForm = async () => {
       const practices = await getPractices();
       loadDataTablePractice(practices);
     } catch (e) {
-      const error = document.createElement("p");
-      error.className = "Error__message";
-      error.textContent =
-        e.description || "Errore nella creazione della pratica.";
-      form.insertBefore(error, actionButtons);
+      clearContainer(errorSection);
+      errorSection.appendChild(errorHandle(`PRACTICE_${e.error}`));
     }
   });
 
@@ -936,7 +949,7 @@ const genPracticeFilters = (brands = [], states = [], getModelsByBrand) => {
   const statusFilter = genMultiSelect("selectFilter", "Stato", states);
 
   const submit = document.createElement("button");
-  submit.className = "Btn__secondary";
+  submit.className = "Btn secondary";
   submit.type = "submit";
   submit.append("Cerca", genIcon("search"));
   submit.addEventListener("click", () => handlePracticesSubmitFilters());
@@ -988,84 +1001,8 @@ const handlePracticesSubmitFilters = async () => {
       filterValue: model,
     });
 
-  /*if (nameplate)
-    filters.push({
-      filterName: "nameplate",
-      filterValue: nameplate,
-    });*/
-
   clearContainer(document.querySelector("tbody"));
   loadDataTablePractice(await getPractices());
 };
 
 /** END PRACTICES SECTION **/
-
-/** UTILS **/
-
-const genTable = (columns = []) => {
-  const tableContainer = document.createElement("div");
-  const table = document.createElement("table");
-  const thead = document.createElement("thead");
-  const trHead = document.createElement("tr");
-  const tbody = document.createElement("tbody");
-
-  tableContainer.className = "Table__container";
-
-  columns.map((columnName) => {
-    const th = document.createElement("th");
-    th.textContent = columnName;
-    trHead.appendChild(th);
-  });
-
-  thead.appendChild(trHead);
-
-  table.append(thead, tbody);
-  tableContainer.appendChild(table);
-
-  return tableContainer;
-};
-
-const genModal = (titleValue, body) => {
-  const background = document.createElement("div");
-  const modal = document.createElement("div");
-  const modalHeader = document.createElement("div");
-  const title = document.createElement("h2");
-
-  MODAL = background;
-
-  const closeBtn = genIcon("cancel");
-  background.id = "modal";
-  background.className = "Modal__background";
-  modal.className = "Modal__card";
-  modalHeader.className = "Modal__header";
-
-  title.textContent = titleValue;
-
-  closeBtn.addEventListener("click", () => background.remove());
-
-  modalHeader.append(title, closeBtn);
-
-  modal.append(modalHeader, body);
-  background.appendChild(modal);
-  return background;
-};
-
-const genInputField = (labelValue, inputType, inputId, placeholder) => {
-  const container = document.createElement("div");
-  const label = document.createElement("label");
-  const input = document.createElement("input");
-
-  container.className = "Input__container";
-  input.className = "Input__Text";
-
-  label.textContent = labelValue;
-
-  input.type = inputType;
-  input.id = inputId;
-  input.placeholder = placeholder;
-
-  container.append(label, input);
-  return container;
-};
-
-/** END UTILS **/

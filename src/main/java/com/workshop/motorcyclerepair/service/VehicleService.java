@@ -9,13 +9,10 @@ import com.workshop.motorcyclerepair.mapper.VehicleMapper;
 import com.workshop.motorcyclerepair.model.Customer;
 import com.workshop.motorcyclerepair.model.Vehicle;
 import com.workshop.motorcyclerepair.repository.VehicleRepository;
-import com.workshop.motorcyclerepair.repository.specification.CustomerSpecification;
 import com.workshop.motorcyclerepair.repository.specification.VehicleSpecification;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 

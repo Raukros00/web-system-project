@@ -12,14 +12,29 @@ const MAIN = document.querySelector(".Main__Container");
 const pageTitle = document.querySelector("#pageTitle");
 const loader = Loader();
 
+const getPractices = async (status) => {
+  const statusList =
+    status === "IN_PROGRESS"
+      ? "status=ACCEPTED&status=IN_PROGRESS"
+      : "status=COMPLETED&status=TO_PAY";
+
+  return await HTTP_GET(`practice/?${statusList}`);
+};
+
+const getPractice = async (practiceId) => {
+  return await HTTP_GET(`practice/${practiceId}`);
+};
+
+const getSparePartsAvailable = async () => {
+  return await HTTP_GET("inventory/?isAvailable=true");
+};
+
 export const buildMechanicPracticesList = async () => {
   pageTitle.textContent = "Pratiche";
   clearContainer(MAIN);
 
   MAIN.appendChild(loader);
-  const practicesList = await HTTP_GET(
-    "practice/?status=ACCEPTED&status=IN_PROGRESS"
-  );
+  const practicesList = await getPractices("IN_PROGRESS");
   loader.remove();
   buildPracticesList(practicesList);
 };
@@ -29,7 +44,7 @@ export const buildMechanicCompletedPractices = async () => {
   clearContainer(MAIN);
 
   MAIN.appendChild(loader);
-  const practicesList = await HTTP_GET("practice/?status=COMPLETED");
+  const practicesList = await getPractices("COMPLETED");
   loader.remove();
   buildPracticesList(practicesList);
 };
@@ -41,16 +56,13 @@ const buildPracticesList = (practiceList) => {
 };
 
 const buildPracticeEditor = async (practiceId) => {
-  clearContainer(MAIN);
-  MAIN.appendChild(loader);
   pageTitle.textContent = `Pratica #${practiceId}`;
+  clearContainer(MAIN);
 
-  const practice = await HTTP_GET(`practice/${practiceId}`);
-
+  MAIN.appendChild(loader);
+  const practice = await getPractice(practiceId);
   loader.remove();
-
   const formPracticeEditor = await genFormPracticeEditor(practice);
-
   MAIN.append(genInfoCardPractice(practice), formPracticeEditor);
 };
 
@@ -113,10 +125,6 @@ const genInfoCardPractice = (practice) => {
   return infoCard;
 };
 
-const getSparePartsAvailable = async () => {
-  return await HTTP_GET("inventory/?isAvailable=true");
-};
-
 const genFormPracticeEditor = async (practice) => {
   const editorCard = document.createElement("div");
   const editorWrapper = document.createElement("div");
@@ -147,8 +155,10 @@ const genFormPracticeEditor = async (practice) => {
 
   totalHoursWorkedLabel.id = "totalHoursWorkedLabel";
   totalHoursWorkedLabel.textContent = "Ore impiegate";
+  totalHoursWorkedLabel.htmlFor = "totalHoursWorked";
   workDescriptionLabel.id = "workDescriptionLabel";
   workDescriptionLabel.textContent = "Operazioni effettuate";
+  workDescriptionLabel.htmlFor = "workDescription";
 
   totalHoursWorkedInput.min = 0;
   totalHoursWorkedInput.value = practice.totalHours ?? 0;
@@ -156,7 +166,7 @@ const genFormPracticeEditor = async (practice) => {
 
   saveBtnContainer.className = "Save__container";
 
-  saveBtn.className = "Btn__primary";
+  saveBtn.className = "Btn primary";
   saveBtn.textContent = "Salva pratica";
 
   editorCard.className = "Status__card";
@@ -203,6 +213,7 @@ const genUsedSparePartsSelector = (practice, availableSpareParts) => {
 
   container.className = "Input__container";
   labelSparePart.textContent = "Lista componenti";
+  labelSparePart.htmlFor = "sparePartSelect";
 
   container.appendChild(labelSparePart);
 
@@ -222,13 +233,11 @@ const genUsedSparePartsSelector = (practice, availableSpareParts) => {
     sparePartSelect.appendChild(option);
   });
 
-  // Bottone aggiungi pezzo
   const addSparePartBtn = document.createElement("button");
   addSparePartBtn.textContent = "Aggiungi";
   addSparePartBtn.type = "button";
-  addSparePartBtn.className = "Btn__secondary";
+  addSparePartBtn.className = "Btn secondary";
 
-  // Funzione per renderizzare la lista
   const renderUsedSparePartsList = () => {
     usedSparePartsList.innerHTML = "";
 
@@ -236,7 +245,6 @@ const genUsedSparePartsSelector = (practice, availableSpareParts) => {
       const li = document.createElement("li");
       li.textContent = `${item.name} x${item.quantity} `;
 
-      // Bottone rimuovi 1 pezzo
       const removeBtn = document.createElement("button");
       removeBtn.textContent = "X";
       removeBtn.type = "button";
@@ -254,7 +262,6 @@ const genUsedSparePartsSelector = (practice, availableSpareParts) => {
     });
   };
 
-  // Event listener per aggiungere pezzo
   addSparePartBtn.addEventListener("click", () => {
     const selectedId = sparePartSelect.value;
     const selectedName =
@@ -295,7 +302,6 @@ const genUsedSparePartsSelector = (practice, availableSpareParts) => {
     renderUsedSparePartsList();
   });
 
-  // Inizializza lista pezzi usati
   if (practice.usedSparePartList) {
     updatedPractice.usedSparePartList = practice.usedSparePartList.map(
       (sp) => ({
@@ -319,39 +325,39 @@ const genUsedSparePartsSelector = (practice, availableSpareParts) => {
 
 const genProgressContainer = (status) => {
   const progressContainer = document.createElement("div");
-  const acceptedLabel = document.createElement("span");
+  const toPayLabel = document.createElement("span");
   const inProgressLabel = document.createElement("span");
   const completedLabel = document.createElement("span");
   const progressBar = document.createElement("div");
   const progress = document.createElement("span");
 
   progressContainer.className = "Progress__container";
-  acceptedLabel.className = "step";
+  toPayLabel.className = "step";
   inProgressLabel.className = "step";
   completedLabel.className = "step";
   progressBar.className = "Progress__bar";
   progress.className = "progress";
   progress.style = "width: 0px";
 
-  acceptedLabel.id = "ACCEPTED";
+  toPayLabel.id = "ACCEPTED";
   inProgressLabel.id = "IN_PROGRESS";
-  completedLabel.id = "COMPLETED";
+  completedLabel.id = "TO_PAY";
 
-  acceptedLabel.textContent = "Accettata";
+  toPayLabel.textContent = "Accettata";
   inProgressLabel.textContent = "In lavorazione";
-  completedLabel.textContent = "Completata";
+  completedLabel.textContent = "Da pagare";
 
   let currentStep = 0;
 
   switch (status) {
-    case "COMPLETED":
+    case "TO_PAY":
       completedLabel.classList.add("active");
       currentStep += 1;
     case "IN_PROGRESS":
       inProgressLabel.classList.add("active");
       currentStep += 1;
     case "ACCEPTED":
-      acceptedLabel.classList.add("active");
+      toPayLabel.classList.add("active");
       currentStep += 1;
   }
 
@@ -372,7 +378,7 @@ const genProgressContainer = (status) => {
   progressBar.appendChild(progress);
 
   progressContainer.append(
-    acceptedLabel,
+    toPayLabel,
     inProgressLabel,
     completedLabel,
     progressBar

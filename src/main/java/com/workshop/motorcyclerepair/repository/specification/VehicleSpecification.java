@@ -3,7 +3,6 @@ package com.workshop.motorcyclerepair.repository.specification;
 import ch.qos.logback.core.util.StringUtil;
 import com.workshop.motorcyclerepair.model.Vehicle;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.util.Objects;
 
 public class VehicleSpecification {

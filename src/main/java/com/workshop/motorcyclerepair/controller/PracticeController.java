@@ -4,7 +4,6 @@ import com.workshop.motorcyclerepair.dto.practice.FilterPracticeDTO;
 import com.workshop.motorcyclerepair.dto.practice.NewPracticeRequestDTO;
 import com.workshop.motorcyclerepair.dto.practice.PracticeDTO;
 import com.workshop.motorcyclerepair.dto.practice.UpdatePracticeRequestDTO;
-import com.workshop.motorcyclerepair.service.InventoryService;
 import com.workshop.motorcyclerepair.service.PracticeService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -29,19 +28,19 @@ public class PracticeController {
             return ResponseEntity.ok().body(practiceService.addNewPractice(newPracticeRequestDTO));
     }
 
-    @PreAuthorize("@roleChecker.hasAnyRole({'MECHANIC', 'ACCEPTANCE_AGENT'})")
+    @PreAuthorize("@roleChecker.hasAnyRole({'MECHANIC', 'ACCEPTANCE_AGENT', 'CASHIER'})")
     @GetMapping("/")
     public ResponseEntity<List<PracticeDTO>> getPracticesList(@ModelAttribute FilterPracticeDTO filter) {
         return ResponseEntity.ok().body(practiceService.getPracticesList(filter));
     }
 
-    @PreAuthorize("@roleChecker.hasRole({'MECHANIC'})")
+    @PreAuthorize("@roleChecker.hasAnyRole({'MECHANIC', 'CASHIER'})")
     @GetMapping("/{id}")
     public ResponseEntity<PracticeDTO> getPracticeById(@PathVariable Long id) {
         return ResponseEntity.ok().body(practiceService.getPracticeById(id));
     }
 
-    @PreAuthorize("@roleChecker.hasRole({'MECHANIC'})")
+    @PreAuthorize("@roleChecker.hasAnyRole({'MECHANIC', 'CASHIER'})")
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updatePracticeById(@PathVariable Long id, @RequestBody UpdatePracticeRequestDTO practice) throws BadRequestException {
         practiceService.updatePracticeById(id, practice);

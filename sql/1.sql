@@ -7,3 +7,7 @@ CREATE TABLE user (
     email VARCHAR(255) NOT NULL UNIQUE,
     role VARCHAR(255) NOT NULL
 );
+
+INSERT INTO user (username, password, first_name, last_name, email, role)
+VALUES ('admin', '$2a$10$is9nZNkh9qHrORYxn9Q8jOYeM4eSM19ZMXqXd369tDduzyQ8N/7pm', 'Alessandro', 'Dominici', 'user@mail.it', 'ADMIN');
+

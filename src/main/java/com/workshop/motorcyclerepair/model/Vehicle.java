@@ -2,13 +2,13 @@ package com.workshop.motorcyclerepair.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "vehicle")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

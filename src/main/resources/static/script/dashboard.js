@@ -17,6 +17,15 @@ import {
   buildVehicleList,
 } from "./acceptance.js";
 
+import { buildPartsList } from "./warehouse.js";
+
+import { buildUsersList } from "./admin.js";
+
+import {
+  buildCashierPracticesList,
+  buildCashierCompletedPracticesList,
+} from "./cashier.js";
+
 window.addEventListener("DOMContentLoaded", async () => {
   await checkTokenValidity();
 
@@ -33,6 +42,18 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     case "ACCEPTANCE_AGENT":
       await buildAcceptanceAgentDashboard();
+      break;
+
+    case "WAREHOUSE_WORKER":
+      buildWareHouseWorkerDashboard();
+      break;
+
+    case "ADMIN":
+      buildAdminDashboard();
+      break;
+
+    case "CASHIER":
+      buildCashierDashboard();
       break;
 
     default:
@@ -105,4 +126,51 @@ const buildAcceptanceAgentDashboard = async () => {
 
   populateMenu(menu);
   buildPracticesList();
+};
+
+const buildWareHouseWorkerDashboard = async () => {
+  const menu = [
+    {
+      label: "Magazzino",
+      iconName: "inventory_2",
+      navAction: () => buildPartsList(),
+      active: true,
+    },
+  ];
+
+  populateMenu(menu);
+  buildPartsList();
+};
+
+const buildAdminDashboard = async () => {
+  const menu = [
+    {
+      label: "Utenti",
+      iconName: "group",
+      navAction: () => buildUsersList(),
+      active: true,
+    },
+  ];
+
+  populateMenu(menu);
+  buildUsersList();
+};
+
+const buildCashierDashboard = async () => {
+  const menu = [
+    {
+      label: "Cassa",
+      iconName: "euro",
+      navAction: () => buildCashierPracticesList(),
+      active: true,
+    },
+    {
+      label: "Archivio",
+      iconName: "receipt",
+      navAction: () => buildCashierCompletedPracticesList(),
+    },
+  ];
+
+  populateMenu(menu);
+  buildCashierPracticesList();
 };

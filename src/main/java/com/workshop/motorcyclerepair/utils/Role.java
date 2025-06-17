@@ -1,12 +1,11 @@
 package com.workshop.motorcyclerepair.utils;
 
-import org.springframework.context.annotation.Bean;
 public enum Role {
     ADMIN,
     ACCEPTANCE_AGENT,
     MECHANIC,
     WAREHOUSE_WORKER,
-    USER;
+    CASHIER;
 
     public String asAuthority() {
         return "ROLE_" + this.name();

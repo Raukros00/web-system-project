@@ -13,7 +13,6 @@ import com.workshop.motorcyclerepair.repository.specification.CustomerSpecificat
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -61,7 +60,7 @@ public class CustomerService {
     }
 
     public CustomerDTO addNewCustomer(NewCustomerRequestDTO newCustomerRequestDTO) {
-        if (customerRepository.findByPhoneNumber(newCustomerRequestDTO.phoneNumber()).isPresent()) {
+        if (customerRepository.findByPhoneNumberOrEmail(newCustomerRequestDTO.phoneNumber(), newCustomerRequestDTO.email()).isPresent()) {
             throw new EntityAlreadyExistsException("This customer already exists!");
         }
 

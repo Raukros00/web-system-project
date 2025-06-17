@@ -6,13 +6,24 @@ CREATE TABLE spare_part (
 );
 
 INSERT INTO spare_part (part_name, quantity, price)
-VALUES ('Freni anteriori', 10, 45.50),
-       ('Filtro olio', 25, 8.90),
-        ('Cinghia distribuzione', 5, 75.00),
-        ('Batteria 12V', 7, 60.00),
-        ('Candele accensione', 40, 3.20),
-        ('Pneumatico estivo', 12, 89.99),
-        ('Dischi freno posteriori', 6, 52.30),
-        ('Specchietto retrovisore', 8, 25.00),
-        ('Faro anteriore', 4, 110.75),
-        ('Pastiglie freno', 20, 30.00);
+VALUES
+    ('Filtro olio', 30, 15.00),
+    ('Candela accensione', 50, 8.50),
+    ('Pastiglie freno', 40, 20.00),
+    ('Cinghia', 25, 30.00),
+    ('Batteria', 15, 55.00),
+    ('Faro anteriore', 10, 70.00),
+    ('Pneumatico anteriore', 20, 100.00),
+    ('Pneumatico posteriore', 20, 110.00),
+    ('Specchietto sinistro', 12, 25.00),
+    ('Specchietto destro', 12, 25.00),
+    ('Catena trasmissione', 18, 45.00),
+    ('Centralina', 5, 150.00),
+    ('Ammortizzatore', 8, 95.00),
+    ('Guarnizione testata', 20, 12.00),
+    ('Olio motore', 50, 10.00),
+    ('Filtro aria', 30, 18.00),
+    ('Pompa freno', 6, 60.00),
+    ('Frizione', 9, 120.00),
+    ('Supporto faro', 14, 22.00),
+    ('Kit tagliando', 20, 80.00);

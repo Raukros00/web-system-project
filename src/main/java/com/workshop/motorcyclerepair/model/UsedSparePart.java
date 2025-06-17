@@ -2,12 +2,12 @@ package com.workshop.motorcyclerepair.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "used_spare_parts")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

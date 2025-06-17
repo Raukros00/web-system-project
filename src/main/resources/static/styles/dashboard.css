@@ -187,6 +187,7 @@ hr {
   justify-content: space-between;
   align-items: end;
   gap: 4rem;
+  margin-top: 3rem;
 }
 
 .Filters__container {
@@ -360,6 +361,10 @@ tbody {
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
+}
+
+.SpareSelect__container select option {
+  color: var(--balck);
 }
 
 .SpareSelect__container button {

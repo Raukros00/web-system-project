@@ -4,14 +4,14 @@ import com.workshop.motorcyclerepair.utils.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "practice")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -39,6 +39,10 @@ public class Practice {
     @Column(name = "total_price")
     @NotNull
     private BigDecimal totalPrice;
+
+    @Column(name = "manpower_cost")
+    @NotNull
+    private BigDecimal manpowerCost;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_id")

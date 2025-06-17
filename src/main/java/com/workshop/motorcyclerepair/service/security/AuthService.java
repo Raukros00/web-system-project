@@ -1,9 +1,9 @@
 package com.workshop.motorcyclerepair.service.security;
 
-import com.workshop.motorcyclerepair.dto.UserDTO;
 import com.workshop.motorcyclerepair.dto.security.LoginRequestDTO;
 import com.workshop.motorcyclerepair.dto.security.LoginResponseDTO;
 import com.workshop.motorcyclerepair.dto.security.RegisterRequestDTO;
+import com.workshop.motorcyclerepair.dto.user.UserDTO;
 import com.workshop.motorcyclerepair.mapper.UserMapper;
 import com.workshop.motorcyclerepair.model.User;
 import com.workshop.motorcyclerepair.repository.UserRepository;
@@ -51,7 +51,7 @@ public class AuthService {
                 .firstName(registerRequestDTO.firstName())
                 .lastName(registerRequestDTO.lastName())
                 .email(registerRequestDTO.email())
-                .role(Role.USER)
+                .role(registerRequestDTO.role())
                 .build()
         ));
     }
