@@ -22,7 +22,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authorization.AuthorizationDeniedException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
@@ -88,61 +87,86 @@ public class PracticeService {
 
 
     @Transactional
-    public void updatePracticeById(Long practiceId, UpdatePracticeRequestDTO practiceRequestDTO) {
-        AtomicReference<BigDecimal> totalPrice = new AtomicReference<>(BigDecimal.ZERO);
-
-        boolean isCashier = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals(Role.CASHIER.asAuthority()));
-
+    public void updatePracticeById(Long practiceId, UpdatePracticeRequestDTO dto) {
         Practice practice = practiceRepository.findById(practiceId)
                 .orElseThrow(() -> new NotFoundException("Practice not found"));
 
-        if(!isCashier) {
-            if(practiceRequestDTO.totalHours() < 0 || practiceRequestDTO.totalHours() < practice.getTotalHours()) {
+        boolean isCashier = isCurrentUserCashier();
+
+        validateUpdateRequest(dto, practice, isCashier);
+
+        if (shouldUpdateSpareParts(dto, practice)) {
+            updateUsedSpareParts(practice, dto);
+        }
+
+        if (!isCashier) {
+            updatePracticeDetails(practice, dto);
+        }
+
+        practice.setStatus(dto.newStatus());
+        practiceRepository.save(practice);
+    }
+
+    private boolean isCurrentUserCashier() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals(Role.CASHIER.asAuthority()));
+    }
+
+    private void validateUpdateRequest(UpdatePracticeRequestDTO dto, Practice practice, boolean isCashier) {
+        if (!isCashier) {
+            if (dto.totalHours() < 0 || dto.totalHours() < practice.getTotalHours()) {
                 throw new BadRequestException("Invalid hours exception");
             }
-
-            if(practiceRequestDTO.newStatus().equals(Status.COMPLETED)){
+            if (dto.newStatus().equals(Status.COMPLETED)) {
                 throw new AuthorizationDeniedException("Access denied");
             }
         }
+    }
 
-        List<UsedSparePart> usedSparePartList = new ArrayList<>();
+    private boolean shouldUpdateSpareParts(UpdatePracticeRequestDTO dto, Practice practice) {
+        if (dto.usedSparePartList() == null || dto.usedSparePartList().isEmpty()) return false;
 
-        if(Objects.nonNull(practiceRequestDTO.usedSparePartList()) && !practiceRequestDTO.usedSparePartList().isEmpty()) {
+        List<Long> dtoIds = dto.usedSparePartList().stream().map(SparePartToUpdateDTO::id).toList();
+        List<Long> entityIds = practice.getUsedSparePartList().stream()
+                .map(pp -> pp.getSparePart().getId())
+                .toList();
 
-            List<SparePartToUpdateDTO> sparePartToUpdate = practiceRequestDTO.usedSparePartList();
+        return !dtoIds.equals(entityIds);
+    }
 
-            inventoryService.updateSparePartQuantities(sparePartToUpdate).forEach(sparePart -> {
+    private void updateUsedSpareParts(Practice practice, UpdatePracticeRequestDTO dto) {
+        List<SparePartToUpdateDTO> sparePartDTOs = dto.usedSparePartList();
+        List<UsedSparePart> updatedParts = new ArrayList<>();
+        AtomicReference<BigDecimal> totalPrice = new AtomicReference<>(BigDecimal.ZERO);
 
-                SparePartToUpdateDTO matchedSparePart = sparePartToUpdate.stream()
-                        .filter(sp -> sp.id().equals(sparePart.getId()))
-                        .findFirst()
-                        .orElseThrow(() -> new NotFoundException("Spare part not found"));
+        inventoryService.updateSparePartQuantities(sparePartDTOs).forEach(sparePart -> {
+            SparePartToUpdateDTO matchedDto = sparePartDTOs.stream()
+                    .filter(sp -> sp.id().equals(sparePart.getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundException("Spare part not found"));
 
-                usedSparePartList.add(UsedSparePart.builder()
-                        .sparePart(sparePartMapper.toEntity(sparePart))
-                        .priceAtUse(sparePart.getPrice())
-                        .practice(practice)
-                        .quantity(matchedSparePart.quantity())
-                        .build());
+            UsedSparePart usedPart = UsedSparePart.builder()
+                    .sparePart(sparePartMapper.toEntity(sparePart))
+                    .priceAtUse(sparePart.getPrice())
+                    .practice(practice)
+                    .quantity(matchedDto.quantity())
+                    .build();
 
+            updatedParts.add(usedPart);
 
-                totalPrice.updateAndGet(current -> current.add(BigDecimal.valueOf(sparePart.getPrice().doubleValue() * matchedSparePart.quantity())));
-            });
-        }
+             totalPrice.updateAndGet(current -> current.add(sparePart.getPrice().multiply(BigDecimal.valueOf(matchedDto.quantity()))));
+        });
 
-        if(!isCashier) {
-            BigDecimal manpowerCost = practice.getManpowerCost().multiply(BigDecimal.valueOf(practiceRequestDTO.totalHours()));
-            practice.getUsedSparePartList().clear();
-            practice.setTotalHours(practiceRequestDTO.totalHours());
-            practice.setWorkDescription(practiceRequestDTO.workDescription());
-            practice.getUsedSparePartList().addAll(usedSparePartList);
-            practice.setTotalPrice(totalPrice.get().add(manpowerCost));
-        }
+        practice.getUsedSparePartList().clear();
+        practice.getUsedSparePartList().addAll(updatedParts);
+        practice.setTotalPrice(totalPrice.get().add(
+                practice.getManpowerCost().multiply(BigDecimal.valueOf(dto.totalHours()))
+        ));
+    }
 
-        practice.setStatus(practiceRequestDTO.newStatus());
-        practiceRepository.save(practice);
+    private void updatePracticeDetails(Practice practice, UpdatePracticeRequestDTO dto) {
+        practice.setTotalHours(dto.totalHours());
+        practice.setWorkDescription(dto.workDescription());
     }
 
     private Specification<Practice> createPracticeSpecification(FilterPracticeDTO filter) {

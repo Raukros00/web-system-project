@@ -325,50 +325,62 @@ const genUsedSparePartsSelector = (practice, availableSpareParts) => {
 
 const genProgressContainer = (status) => {
   const progressContainer = document.createElement("div");
-  const toPayLabel = document.createElement("span");
+  const acceptedLabel = document.createElement("span");
   const inProgressLabel = document.createElement("span");
-  const completedLabel = document.createElement("span");
+  const toPayLabel = document.createElement("span");
   const progressBar = document.createElement("div");
   const progress = document.createElement("span");
 
   progressContainer.className = "Progress__container";
-  toPayLabel.className = "step";
+  acceptedLabel.className = "step";
   inProgressLabel.className = "step";
-  completedLabel.className = "step";
+  toPayLabel.className = "step";
   progressBar.className = "Progress__bar";
   progress.className = "progress";
   progress.style = "width: 0px";
 
-  toPayLabel.id = "ACCEPTED";
+  acceptedLabel.id = "ACCEPTED";
   inProgressLabel.id = "IN_PROGRESS";
-  completedLabel.id = "TO_PAY";
+  toPayLabel.id = "TO_PAY";
 
-  toPayLabel.textContent = "Accettata";
+  acceptedLabel.textContent = "Accettata";
   inProgressLabel.textContent = "In lavorazione";
-  completedLabel.textContent = "Da pagare";
+  toPayLabel.textContent = "Da pagare";
 
   let currentStep = 0;
 
   switch (status) {
     case "TO_PAY":
-      completedLabel.classList.add("active");
+      toPayLabel.classList.add("active");
       currentStep += 1;
     case "IN_PROGRESS":
       inProgressLabel.classList.add("active");
       currentStep += 1;
     case "ACCEPTED":
-      toPayLabel.classList.add("active");
+      acceptedLabel.classList.add("active");
       currentStep += 1;
+    default:
+      break;
   }
 
   progress.style.width = `${((currentStep - 1) / (3 - 1)) * 100}%`;
 
-  const btns = [inProgressLabel, completedLabel];
+  const btns = [inProgressLabel, toPayLabel];
 
   btns.map((btn) =>
     btn.addEventListener("click", () => {
-      if (btn.classList.contains("active")) return;
-      currentStep += 1;
+      console.log(btn.textContent);
+
+      switch (btn.textContent) {
+        case "Da pagare":
+          currentStep = 3;
+          break;
+        case "In lavorazione":
+          currentStep = 2;
+          toPayLabel.classList.remove("active");
+          break;
+      }
+
       btn.classList.add("active");
       updatedPractice.newStatus = btn.id;
       progress.style.width = `${((currentStep - 1) / (3 - 1)) * 100}%`;
@@ -378,9 +390,9 @@ const genProgressContainer = (status) => {
   progressBar.appendChild(progress);
 
   progressContainer.append(
-    toPayLabel,
+    acceptedLabel,
     inProgressLabel,
-    completedLabel,
+    toPayLabel,
     progressBar
   );
 
