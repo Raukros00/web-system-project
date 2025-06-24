@@ -1,6 +1,6 @@
 import { ERROR_MESSAGES } from "./ERRORS.js";
 
-const BASER_URL = "http://localhost:8080";
+const BASER_URL = "http://localhost:8080/api";
 
 export let userProfile = null;
 export let MODAL;

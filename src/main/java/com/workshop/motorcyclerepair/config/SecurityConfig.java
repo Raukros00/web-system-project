@@ -43,10 +43,9 @@ public class SecurityConfig {
                         .defaultAuthenticationEntryPointFor(securityExceptionHandler, new AntPathRequestMatcher("/**"))
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/**").authenticated()
                         .requestMatchers(
-                                "/auth/**",
                                 "/public/**",
-                                "/practice/search",
                                 "/",
                                 "/*.html",
                                 "/script/**",
@@ -57,7 +56,7 @@ public class SecurityConfig {
                                 "/docs/**",
                                 "/error/**"
                         ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
 
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

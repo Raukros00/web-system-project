@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @AllArgsConstructor
 @Tag(name = "User", description = "Handles operations related to user management, including retrieval and updates.")
 public class UserController {

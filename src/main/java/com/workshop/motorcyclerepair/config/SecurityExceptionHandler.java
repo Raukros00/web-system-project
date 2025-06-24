@@ -15,7 +15,9 @@ public class SecurityExceptionHandler implements AuthenticationEntryPoint, Acces
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
-        response.sendRedirect("/error/401.html");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\": \"UNAUTHORIZED\", \"description\": \"" + authException.getMessage() + "\"}");
     }
 
     @Override
@@ -23,7 +25,7 @@ public class SecurityExceptionHandler implements AuthenticationEntryPoint, Acces
                        AccessDeniedException accessDeniedException) throws IOException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("application/json");
-        response.getWriter().write("{\"error\": \"" + accessDeniedException.getMessage() + "\"}");
+        response.getWriter().write("{\"error\": \"FORBIDDEN\", \"description\": \"" + accessDeniedException.getMessage() + "\"}");
     }
 }
 

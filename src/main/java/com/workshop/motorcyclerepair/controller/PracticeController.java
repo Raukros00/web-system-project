@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/practice")
+@RequestMapping("/api/practice")
 @Tag(name = "Practice", description = "Manages repair practices including creation, retrieval, filtering, and updates.")
 public class PracticeController {
 

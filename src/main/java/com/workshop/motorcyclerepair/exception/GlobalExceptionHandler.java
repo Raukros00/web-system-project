@@ -49,14 +49,4 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(NoSuchElementException.class) // o EntityNotFoundException, ecc.
-    public ResponseEntity<Map<String, Object>> handleNotFound(Exception ex) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", LocalDateTime.now());
-        response.put("status", 404);
-        response.put("error", "Not Found");
-        response.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }
-
 }
