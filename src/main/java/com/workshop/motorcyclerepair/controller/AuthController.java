@@ -5,20 +5,18 @@ import com.workshop.motorcyclerepair.dto.security.LoginResponseDTO;
 import com.workshop.motorcyclerepair.dto.security.RegisterRequestDTO;
 import com.workshop.motorcyclerepair.dto.user.UserDTO;
 import com.workshop.motorcyclerepair.service.security.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
+@Tag(name = "Authentication", description = "Handles user authentication, registration, and profile retrieval operations.")
 public class AuthController {
     private final AuthService authService;
 

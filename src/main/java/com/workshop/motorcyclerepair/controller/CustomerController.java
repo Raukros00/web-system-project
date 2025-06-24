@@ -4,17 +4,18 @@ import com.workshop.motorcyclerepair.dto.customer.CustomerDTO;
 import com.workshop.motorcyclerepair.dto.customer.FilterCustomerDTO;
 import com.workshop.motorcyclerepair.dto.customer.NewCustomerRequestDTO;
 import com.workshop.motorcyclerepair.service.CustomerService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/customer")
 @AllArgsConstructor
+@Tag(name = "Customer", description = "Manages customer operations such as retrieving, filtering, and creating customers.")
 public class CustomerController {
 
     private final CustomerService customerService;

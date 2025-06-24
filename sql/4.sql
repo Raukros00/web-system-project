@@ -1,3 +1,5 @@
+USE workshopdb;
+
 CREATE TABLE practice (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     status VARCHAR(255),

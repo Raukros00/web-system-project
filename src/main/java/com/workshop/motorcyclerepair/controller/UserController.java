@@ -3,16 +3,17 @@ package com.workshop.motorcyclerepair.controller;
 import com.workshop.motorcyclerepair.dto.user.UpdateUserRequestDTO;
 import com.workshop.motorcyclerepair.dto.user.UserDTO;
 import com.workshop.motorcyclerepair.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/user")
 @AllArgsConstructor
+@Tag(name = "User", description = "Handles operations related to user management, including retrieval and updates.")
 public class UserController {
 
     private final UserService userService;
@@ -34,6 +35,5 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UpdateUserRequestDTO updateUserRequestDTO) {
         return ResponseEntity.ok().body(userService.updateUser(userId, updateUserRequestDTO));
     }
-
 
 }

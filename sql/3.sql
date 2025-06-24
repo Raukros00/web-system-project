@@ -1,3 +1,5 @@
+USE workshopdb;
+
 CREATE TABLE vehicle (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nameplate VARCHAR(255) NOT NULL,

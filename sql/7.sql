@@ -1,3 +1,5 @@
+USE workshopdb;
+
 CREATE TABLE setting (
     `key` VARCHAR(100) PRIMARY KEY,
     `value` TEXT

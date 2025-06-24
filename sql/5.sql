@@ -1,3 +1,5 @@
+USE workshopdb;
+
 CREATE TABLE spare_part (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     part_name VARCHAR(100) NOT NULL,

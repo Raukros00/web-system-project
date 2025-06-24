@@ -44,14 +44,18 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/auth/**",           // include /auth/register
+                                "/auth/**",
                                 "/public/**",
                                 "/practice/search",
-                                "/",                  // homepage se presente
-                                "/*.html",        // entrypoint SPA
-                                "/script/**",         // JS frontend
-                                "/styles/**",            // CSS frontend
-                                "/images/**"          // immagini
+                                "/",
+                                "/*.html",
+                                "/script/**",
+                                "/styles/**",
+                                "/images/**",
+                                "/v3/**",
+                                "/swagger-ui/**",
+                                "/docs/**",
+                                "/error/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

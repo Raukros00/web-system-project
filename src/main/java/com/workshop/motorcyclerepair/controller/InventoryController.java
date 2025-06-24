@@ -5,22 +5,19 @@ import com.workshop.motorcyclerepair.dto.spare.NewSparePartRequestDTO;
 import com.workshop.motorcyclerepair.dto.spare.SparePartDTO;
 import com.workshop.motorcyclerepair.dto.spare.SparePartToUpdateDTO;
 import com.workshop.motorcyclerepair.service.InventoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/inventory")
 @AllArgsConstructor
+@Tag(name = "Inventory", description = "Handles spare parts inventory operations, including listing, adding, and updating parts.")
 public class InventoryController {
 
     private final InventoryService inventoryService;

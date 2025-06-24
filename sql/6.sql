@@ -1,3 +1,5 @@
+USE workshopdb;
+
 CREATE TABLE used_spare_parts (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     practice_id BIGINT NOT NULL,

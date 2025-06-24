@@ -4,16 +4,17 @@ import com.workshop.motorcyclerepair.dto.vehicle.FilterVehicleDTO;
 import com.workshop.motorcyclerepair.dto.vehicle.NewVehicleRequestDTO;
 import com.workshop.motorcyclerepair.dto.vehicle.VehicleDTO;
 import com.workshop.motorcyclerepair.service.VehicleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/vehicle")
 @AllArgsConstructor
+@Tag(name = "Vehicle", description = "Manages vehicle-related operations such as retrieval, filtering, and creation.")
 public class VehicleController {
 
     private final VehicleService vehicleService;
@@ -42,7 +43,5 @@ public class VehicleController {
     public ResponseEntity<VehicleDTO> newVehicle(@RequestBody @Valid NewVehicleRequestDTO newVehicle) {
         return ResponseEntity.ok().body(vehicleService.insertNewVehicle(newVehicle));
     }
-
-
 
 }
