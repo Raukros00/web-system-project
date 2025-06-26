@@ -355,6 +355,8 @@ tbody {
 .selected {
   white-space: nowrap;
   display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .SpareSelect__container {
