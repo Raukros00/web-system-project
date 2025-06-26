@@ -137,11 +137,13 @@ const genNewCustomerForm = async () => {
 
   cancelBtn.addEventListener("click", () => MODAL.remove());
   createBtn.addEventListener("click", async () => {
-    const firstName = firstNameInput.value;
-    const lastName = lastNameInput.value;
-    const birthDate = birthDateInput.value;
-    const phoneNumber = phoneNumberInput.value;
-    const email = emailInput.value;
+    const firstName = document.querySelector("#firstNameInput").value;
+    const lastName = document.querySelector("#lastNameInput").value;
+    const birthDate = document.querySelector("#birthDateInput").value;
+    const phoneNumber = document.querySelector("#phoneNumberInput").value;
+    const email = document.querySelector("#emailInput").value;
+
+    console.log(firstName, lastName, birthDate, phoneNumber, email);
 
     if (!firstName || !lastName || !birthDate || !phoneNumber || !email) {
       clearContainer(errorSection);

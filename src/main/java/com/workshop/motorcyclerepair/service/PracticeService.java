@@ -9,7 +9,6 @@ import com.workshop.motorcyclerepair.dto.spare.SparePartToUpdateDTO;
 import com.workshop.motorcyclerepair.exception.BadRequestException;
 import com.workshop.motorcyclerepair.exception.NotFoundException;
 import com.workshop.motorcyclerepair.mapper.PracticeMapper;
-import com.workshop.motorcyclerepair.mapper.SparePartMapper;
 import com.workshop.motorcyclerepair.model.Practice;
 import com.workshop.motorcyclerepair.model.UsedSparePart;
 import com.workshop.motorcyclerepair.model.Vehicle;
@@ -20,15 +19,16 @@ import com.workshop.motorcyclerepair.utils.Role;
 import com.workshop.motorcyclerepair.utils.Status;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -41,7 +41,6 @@ public class PracticeService {
     private final SettingService settingService;
 
     private final PracticeMapper practiceMapper;
-    private final SparePartMapper sparePartMapper = SparePartMapper.INSTANCE;
 
     public PracticeDTO addNewPractice(NewPracticeRequestDTO newPracticeRequestDTO)  {
 
@@ -72,7 +71,7 @@ public class PracticeService {
     }
 
     public List<PracticeDTO> getPracticesList(FilterPracticeDTO filter) {
-        return practiceRepository.findAll(createPracticeSpecification(filter))
+        return practiceRepository.findAll(createPracticeSpecification(filter), Sort.by(Sort.Direction.DESC, "status"))
                 .stream()
                 .map(practiceMapper::toDTO)
                 .toList();
@@ -124,42 +123,38 @@ public class PracticeService {
     }
 
     private boolean shouldUpdateSpareParts(UpdatePracticeRequestDTO dto, Practice practice) {
-        if (dto.usedSparePartList() == null || dto.usedSparePartList().isEmpty()) return false;
+        if (dto.usedSparePartList() == null) return false;
 
-        List<Long> dtoIds = dto.usedSparePartList().stream().map(SparePartToUpdateDTO::id).toList();
-        List<Long> entityIds = practice.getUsedSparePartList().stream()
-                .map(pp -> pp.getSparePart().getId())
-                .toList();
+        Map<Long, Integer> dtoMap = dto.usedSparePartList().stream()
+                .collect(Collectors.toMap(SparePartToUpdateDTO::id, SparePartToUpdateDTO::quantity));
 
-        return !dtoIds.equals(entityIds);
+        Map<Long, Integer> existingMap = practice.getUsedSparePartList().stream()
+                .collect(Collectors.toMap(
+                        usp -> usp.getSparePart().getId(),
+                        UsedSparePart::getQuantity
+                ));
+
+        return !dtoMap.equals(existingMap);
     }
 
+
     private void updateUsedSpareParts(Practice practice, UpdatePracticeRequestDTO dto) {
-        List<SparePartToUpdateDTO> sparePartDTOs = dto.usedSparePartList();
-        List<UsedSparePart> updatedParts = new ArrayList<>();
-        AtomicReference<BigDecimal> totalPrice = new AtomicReference<>(BigDecimal.ZERO);
+        List<SparePartToUpdateDTO> updatedDTOs = dto.usedSparePartList() == null ? List.of() : dto.usedSparePartList();
 
-        inventoryService.updateSparePartQuantities(sparePartDTOs).forEach(sparePart -> {
-            SparePartToUpdateDTO matchedDto = sparePartDTOs.stream()
-                    .filter(sp -> sp.id().equals(sparePart.getId()))
-                    .findFirst()
-                    .orElseThrow(() -> new NotFoundException("Spare part not found"));
+        List<UsedSparePart> updatedParts = inventoryService.syncSparePartsWithInventory(
+                practice.getUsedSparePartList(),
+                updatedDTOs,
+                practice
+        );
 
-            UsedSparePart usedPart = UsedSparePart.builder()
-                    .sparePart(sparePartMapper.toEntity(sparePart))
-                    .priceAtUse(sparePart.getPrice())
-                    .practice(practice)
-                    .quantity(matchedDto.quantity())
-                    .build();
+        BigDecimal totalPartsPrice = updatedParts.stream()
+                .map(p -> p.getPriceAtUse().multiply(BigDecimal.valueOf(p.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            updatedParts.add(usedPart);
-
-             totalPrice.updateAndGet(current -> current.add(sparePart.getPrice().multiply(BigDecimal.valueOf(matchedDto.quantity()))));
-        });
 
         practice.getUsedSparePartList().clear();
         practice.getUsedSparePartList().addAll(updatedParts);
-        practice.setTotalPrice(totalPrice.get().add(
+        practice.setTotalPrice(totalPartsPrice.add(
                 practice.getManpowerCost().multiply(BigDecimal.valueOf(dto.totalHours()))
         ));
     }
